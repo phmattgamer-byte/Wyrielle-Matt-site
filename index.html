@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Wyrielle ❤️</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #ffafc1, #ff78a9);
+        color: white;
+        text-align: center;
+        overflow: hidden;
+    }
+    h1 {
+        margin-top: 30px;
+        font-size: 2.5em;
+        animation: fadeIn 2s ease-in-out;
+    }
+    p {
+        font-size: 1.2em;
+        margin: 10px;
+        opacity: 1;
+    }
+    button {
+        margin: 8px;
+        padding: 10px 20px;
+        font-size: 1em;
+        border: none;
+        border-radius: 20px;
+        background: white;
+        color: #ff4e8c;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+    button:hover {
+        background: #ffe3f0;
+        transform: scale(1.1);
+    }
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+    .floating {
+        position: absolute;
+        user-select: none;
+    }
+    #buttons {
+        display: none; /* hidden at start */
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<h1>For Wyrielle 💖</h1>
+<p>Tap the button below to see your surprise ❤️</p>
+
+<!-- First button -->
+<button id="startButton">🎁 Open Your Surprise</button>
+
+<!-- Background Music -->
+<audio id="bgMusic" src="Paraluman.mp3" loop></audio>
+
+<!-- 20 Love Buttons -->
+<div id="buttons">
+    <button onclick="showLove('I love your smile, Wyrielle 😍')">Your beautiful smile</button>
+    <button onclick="showLove('I love how your laugh lights up everything 😂')">Your laugh</button>
+    <button onclick="showLove('I love thinking of you every moment ⏳')">I think of you</button>
+    <button onclick="showLove('I love your kindness and warmth ❤️')">Your kindness</button>
+    <button onclick="showLove('I love your hugs 🤗')">Your hugs</button>
+    <button onclick="showLove('I love our memories together 💭')">Our memories</button>
+    <button onclick="showLove('I love dreaming of our future together 🌟')">Our future</button>
+    <button onclick="showLove('I love how amazing you are 💯')">You’re amazing</button>
+    <button onclick="showLove('I love how you make everything better 💞')">You make it better</button>
+    <button onclick="showLove('I love every little thing about you ✨')">Every little thing</button>
+    <button onclick="showLove('I love how you brighten my days 🌞')">You brighten days</button>
+    <button onclick="showLove('I love how special you are 💎')">You’re special</button>
+    <button onclick="showLove('I love you more than words can say 💌')">Words can’t say</button>
+    <button onclick="showLove('I love your eyes that sparkle like stars 🌟')">Your sparkling eyes</button>
+    <button onclick="showLove('I love you with all my heart 💗')">All my heart</button>
+    <button onclick="showLove('I love how you feel like home 🏡')">You feel like home</button>
+    <button onclick="showLove('I love loving you 🥰')">I love loving you</button>
+    <button onclick="showLove('I love every second with you ⏰')">Every second</button>
+    <button onclick="showLove('I love our laughter together 😂💖')">Our laughter</button>
+    <button onclick="showLove('I love you forever and always 💞')">Forever & always</button>
+</div>
+
+<script>
+// Button interaction
+document.getElementById("startButton").onclick = function() {
+    this.style.display = "none";               // Hide the first button
+    document.getElementById("bgMusic").play(); // Play music
+    document.getElementById("buttons").style.display = "block"; // Show all buttons
+    startAnimation();                          // Start hearts/confetti
+}
+
+// Floating hearts + confetti
+function startAnimation() {
+    for (let i = 0; i < 40; i++) {
+        let div = document.createElement("div");
+        div.className = "floating";
+        div.style.left = Math.random() * 100 + "vw";
+        div.style.top = Math.random() * 100 + "vh";
+        div.style.fontSize = (Math.random() * 30 + 15) + "px";
+        if (i % 2 === 0) div.textContent = "❤️"; 
+        else div.textContent = "🎉";
+        document.body.appendChild(div);
+        animateFloating(div);
+    }
+}
+
+// Animate movement
+function animateFloating(el) {
+    let x = Math.random() * 200 - 100;
+    let y = Math.random() * 200 - 100;
+    el.animate([
+        { transform: `translate(0,0)` },
+        { transform: `translate(${x}px, ${y}px)` }
+    ], { 
+        duration: Math.random() * 4000 + 4000,
+        iterations: Infinity,
+        direction: "alternate"
+    });
+}
+
+// Button messages
+function showLove(msg) {
+    alert(msg);
+}
+</script>
+
+</body>
+</html>
