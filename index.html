@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>aura • your private cloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyrielle & Matt • private storage</title>
     <style>
         * {
             margin: 0;
@@ -12,27 +12,30 @@
         }
 
         :root {
-            --bg-dark: #0a0a0c;
-            --bg-card: #111315;
-            --surface: #1a1d21;
-            --surface-light: #2a2f35;
-            --primary: #6366f1;
-            --primary-glow: #818cf8;
-            --accent: #10b981;
-            --text: #ffffff;
-            --text-secondary: #9ca3af;
-            --border: #2d3138;
-            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --bg-primary: #0B0E14;
+            --bg-secondary: #14181F;
+            --surface: #1E242C;
+            --surface-light: #2A313C;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8B5CF6;
+            --accent-glow: rgba(99, 102, 241, 0.5);
+            --text-primary: #FFFFFF;
+            --text-secondary: #94A3B8;
+            --text-tertiary: #64748B;
+            --border: #2D3748;
+            --success: #10B981;
+            --gradient: linear-gradient(135deg, #6366f1, #8B5CF6);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         /* Custom scrollbar */
@@ -42,7 +45,7 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--bg-card);
+            background: var(--bg-secondary);
         }
 
         ::-webkit-scrollbar-thumb {
@@ -51,178 +54,166 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
+            background: var(--accent-primary);
         }
 
         /* Animated background */
-        .gradient-bg {
+        .bg-gradient {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
             pointer-events: none;
             z-index: -1;
         }
 
         /* Header */
         .header {
-            background: rgba(17, 19, 21, 0.8);
+            background: rgba(20, 24, 31, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(45, 49, 56, 0.5);
-            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .header-content {
-            max-width: 1400px;
+            max-width: 1440px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 20px;
         }
 
+        /* Logo section - exact size */
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            height: 48px;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: var(--gradient);
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             transform: rotate(-5deg);
-            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.5);
+            box-shadow: 0 8px 16px -4px var(--accent-glow);
+            flex-shrink: 0;
         }
 
         .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-name {
             font-size: 24px;
             font-weight: 700;
+            letter-spacing: -0.5px;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
+            line-height: 1.2;
         }
 
-        .stats {
+        .logo-sub {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            letter-spacing: 0.5px;
+        }
+
+        /* Storage stats - exact size */
+        .storage-stats {
             display: flex;
-            gap: 24px;
+            align-items: center;
+            gap: 12px;
             background: var(--surface);
             padding: 8px 20px;
             border-radius: 40px;
             border: 1px solid var(--border);
+            height: 48px;
         }
 
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .storage-used {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .storage-total {
             font-size: 14px;
+            color: var(--text-tertiary);
         }
 
-        .stat-value {
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* Main container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        /* Hero section */
-        .hero {
-            background: var(--surface);
-            border-radius: 32px;
-            padding: 32px;
-            margin-bottom: 32px;
-            border: 1px solid var(--border);
-            position: relative;
+        .storage-bar {
+            width: 80px;
+            height: 6px;
+            background: var(--surface-light);
+            border-radius: 3px;
             overflow: hidden;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
+        .storage-fill {
             height: 100%;
-            background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
-            pointer-events: none;
+            width: 0%;
+            background: var(--gradient);
+            border-radius: 3px;
+            transition: width 0.3s;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
+        /* Main container - exact max width */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px 32px;
         }
 
-        .hero-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 16px;
+        /* Welcome section - exact spacing */
+        .welcome {
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            height: 60px;
         }
 
-        .hero-title span {
+        .welcome h1 {
+            font-size: 28px;
+            font-weight: 600;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .hero-stats {
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
+        .welcome-date {
+            font-size: 16px;
+            color: var(--text-tertiary);
+            padding: 8px 16px;
+            background: var(--surface);
+            border-radius: 30px;
+            border: 1px solid var(--border);
         }
 
-        .hero-stat {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .hero-stat-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--surface-light);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .hero-stat-info h4 {
-            font-size: 14px;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        .hero-stat-info p {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        /* Connection status */
+        /* Connection card - exact size */
         .connection-card {
-            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.1) 100%);
+            background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12));
             border: 1px solid rgba(99,102,241,0.3);
-            border-radius: 24px;
+            border-radius: 20px;
             padding: 20px 24px;
             margin-bottom: 32px;
             display: flex;
@@ -231,21 +222,23 @@
             flex-wrap: wrap;
             gap: 16px;
             backdrop-filter: blur(8px);
+            height: 84px;
         }
 
-        .connection-info {
+        .connection-left {
             display: flex;
             align-items: center;
             gap: 16px;
         }
 
         .connection-dot {
-            width: 12px;
-            height: 12px;
-            background: #10b981;
+            width: 14px;
+            height: 14px;
+            background: var(--success);
             border-radius: 50%;
-            box-shadow: 0 0 20px #10b981;
+            box-shadow: 0 0 20px var(--success);
             animation: pulse 2s infinite;
+            flex-shrink: 0;
         }
 
         @keyframes pulse {
@@ -254,26 +247,36 @@
             100% { opacity: 1; }
         }
 
+        .connection-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
         .connection-text h3 {
             font-size: 18px;
-            margin-bottom: 4px;
+            font-weight: 600;
         }
 
         .connection-text p {
-            color: var(--text-secondary);
             font-size: 14px;
+            color: var(--text-secondary);
         }
 
         .connection-badge {
             background: var(--surface);
-            padding: 8px 16px;
+            padding: 8px 20px;
             border-radius: 40px;
             font-size: 14px;
+            font-weight: 500;
             border: 1px solid var(--border);
+            height: 40px;
+            display: flex;
+            align-items: center;
         }
 
-        /* Create album */
-        .create-album {
+        /* Create album section - exact spacing */
+        .create-section {
             background: var(--surface);
             border-radius: 24px;
             padding: 24px;
@@ -286,6 +289,7 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 20px;
+            height: 40px;
         }
 
         .section-header-icon {
@@ -297,6 +301,7 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
+            flex-shrink: 0;
         }
 
         .section-header h2 {
@@ -308,120 +313,111 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            min-height: 58px;
         }
 
         .album-form input {
             flex: 1;
-            min-width: 250px;
-            padding: 16px 20px;
-            background: var(--bg-card);
+            min-width: 280px;
+            height: 58px;
+            padding: 0 20px;
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 16px;
-            color: var(--text);
+            color: var(--text-primary);
             font-size: 16px;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         .album-form input:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
         }
 
-        .album-form input::placeholder {
-            color: var(--text-secondary);
-        }
-
         .btn-primary {
+            height: 58px;
+            padding: 0 32px;
             background: var(--gradient);
             color: white;
             border: none;
-            padding: 16px 32px;
             border-radius: 16px;
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(99,102,241,0.5);
+            box-shadow: 0 8px 20px -4px var(--accent-glow);
         }
 
-        /* Upload area */
+        /* Upload area - exact size */
         .upload-area {
             background: var(--surface);
             border: 2px dashed var(--border);
-            border-radius: 32px;
-            padding: 48px 24px;
+            border-radius: 28px;
+            padding: 36px 24px;
             margin-bottom: 32px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             position: relative;
-            overflow: hidden;
-        }
-
-        .upload-area::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(99,102,241,0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .upload-area:hover::before {
-            opacity: 1;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .upload-area:hover {
-            border-color: var(--primary);
-            transform: scale(1.02);
+            border-color: var(--accent-primary);
+            background: rgba(99,102,241,0.02);
         }
 
         .upload-icon {
-            font-size: 64px;
+            font-size: 56px;
             margin-bottom: 16px;
             animation: float 3s ease-in-out infinite;
         }
 
         @keyframes float {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
             100% { transform: translateY(0px); }
         }
 
         .upload-title {
             font-size: 24px;
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 8px;
         }
 
         .upload-subtitle {
+            font-size: 16px;
             color: var(--text-secondary);
             margin-bottom: 24px;
         }
 
         .upload-select {
+            height: 48px;
+            padding: 0 24px;
             background: var(--surface-light);
             border: 1px solid var(--border);
-            padding: 14px 28px;
-            border-radius: 40px;
-            color: var(--text);
+            border-radius: 30px;
+            color: var(--text-primary);
             font-size: 15px;
-            margin: 0 8px;
             cursor: pointer;
+            margin: 0 8px;
+            min-width: 200px;
         }
 
-        /* Albums grid */
+        /* Albums grid - exact sizing */
         .albums-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -431,48 +427,35 @@
 
         .album-card {
             background: var(--surface);
-            border-radius: 24px;
+            border-radius: 20px;
             padding: 20px;
             border: 1px solid var(--border);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             position: relative;
-            overflow: hidden;
-        }
-
-        .album-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient);
-            transform: translateX(-100%);
-            transition: transform 0.3s;
-        }
-
-        .album-card:hover::before {
-            transform: translateX(0);
+            height: 220px;
+            display: flex;
+            flex-direction: column;
         }
 
         .album-card:hover {
             transform: translateY(-4px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 30px -10px rgba(99,102,241,0.3);
+            border-color: var(--accent-primary);
+            box-shadow: 0 12px 24px -8px rgba(99,102,241,0.3);
         }
 
         .album-cover {
             width: 100%;
-            aspect-ratio: 1;
+            height: 120px;
             background: var(--surface-light);
-            border-radius: 16px;
+            border-radius: 14px;
             margin-bottom: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 40px;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .album-cover img {
@@ -488,37 +471,95 @@
 
         .album-info {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            height: 32px;
         }
 
         .album-name {
             font-weight: 600;
             font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
         }
 
         .album-count {
-            color: var(--text-secondary);
             font-size: 14px;
+            color: var(--text-tertiary);
             background: var(--surface-light);
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 20px;
+            height: 28px;
+            display: flex;
+            align-items: center;
         }
 
-        /* Photos grid */
+        /* Delete button */
+        .delete-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            color: #ef4444;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .album-card:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Photos section */
         .photos-section {
             background: var(--surface);
-            border-radius: 32px;
+            border-radius: 28px;
             padding: 24px;
             margin-top: 32px;
             border: 1px solid var(--border);
         }
 
+        .photos-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            height: 40px;
+        }
+
+        .photos-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .photos-count {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            background: var(--surface-light);
+            padding: 6px 14px;
+            border-radius: 30px;
+        }
+
         .photos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 8px;
-            margin-top: 20px;
         }
 
         .photo-item {
@@ -534,41 +575,25 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s;
+            transition: transform 0.3s;
         }
 
         .photo-item:hover img {
             transform: scale(1.1);
         }
 
-        .photo-item::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .photo-item:hover::after {
-            opacity: 1;
-        }
-
         .photo-badge {
             position: absolute;
             bottom: 8px;
             right: 8px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 12px;
             z-index: 2;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.2s;
         }
 
         .photo-item:hover .photo-badge {
@@ -583,8 +608,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(16px);
             z-index: 1000;
             padding: 40px;
         }
@@ -597,24 +622,25 @@
         .modal-header {
             display: flex;
             justify-content: flex-end;
-            padding: 20px;
+            padding: 16px;
+            height: 80px;
         }
 
         .modal-close {
             width: 48px;
             height: 48px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         .modal-close:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             transform: rotate(90deg);
         }
 
@@ -625,33 +651,34 @@
             justify-content: center;
         }
 
-        .modal-media img, .modal-media video {
-            max-width: 90%;
-            max-height: 80vh;
+        .modal-media img,
+        .modal-media video {
+            max-width: 100%;
+            max-height: 70vh;
             object-fit: contain;
             border-radius: 16px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
 
         .modal-download {
             position: absolute;
             bottom: 40px;
             right: 40px;
+            height: 56px;
+            padding: 0 32px;
             background: var(--gradient);
             color: white;
             text-decoration: none;
-            padding: 16px 32px;
-            border-radius: 40px;
+            border-radius: 30px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         .modal-download:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(99,102,241,0.5);
+            box-shadow: 0 8px 20px -4px var(--accent-glow);
         }
 
         /* Progress bar */
@@ -670,63 +697,72 @@
             height: 100%;
             background: var(--gradient);
             width: 0%;
-            transition: width 0.3s;
-            box-shadow: 0 0 20px var(--primary);
+            transition: width 0.2s;
         }
 
         /* Empty state */
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
+            padding: 48px 20px;
+            color: var(--text-tertiary);
+            grid-column: 1 / -1;
         }
 
         .empty-state-icon {
-            font-size: 80px;
-            margin-bottom: 24px;
+            font-size: 64px;
+            margin-bottom: 16px;
             opacity: 0.5;
-            animation: float 3s ease-in-out infinite;
         }
 
         .empty-state h3 {
-            font-size: 24px;
-            color: var(--text);
+            font-size: 20px;
+            color: var(--text-secondary);
             margin-bottom: 8px;
         }
 
-        /* Toast */
+        /* Toast notification */
         .toast {
             position: fixed;
             bottom: 24px;
-            left: 24px;
-            right: 24px;
-            max-width: 400px;
-            margin: 0 auto;
+            left: 50%;
+            transform: translateX(-50%);
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px 20px;
+            border-radius: 40px;
+            padding: 12px 24px;
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            animation: slideUp 0.3s ease;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.2s ease;
             z-index: 1000;
+            white-space: nowrap;
+            min-width: 300px;
+            height: 56px;
         }
 
         .toast-success {
             width: 24px;
             height: 24px;
-            background: #10b981;
+            background: var(--success);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
         }
 
         @keyframes slideUp {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
         }
 
         /* Responsive */
@@ -736,38 +772,34 @@
                 align-items: flex-start;
             }
             
-            .stats {
-                width: 100%;
-                justify-content: space-around;
+            .welcome {
+                height: auto;
+                flex-direction: column;
+                align-items: flex-start;
             }
             
-            .hero-stats {
-                gap: 16px;
+            .connection-card {
+                height: auto;
+                padding: 16px;
             }
             
-            .hero-stat {
-                width: calc(50% - 8px);
-            }
-            
-            .albums-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .photos-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .toast {
+                min-width: 90%;
+                white-space: normal;
             }
             
             .modal-download {
                 bottom: 20px;
                 right: 20px;
                 left: 20px;
-                text-align: center;
+                width: auto;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="gradient-bg"></div>
+    <div class="bg-gradient"></div>
 
     <!-- Progress bar -->
     <div class="progress-container" id="progressContainer">
@@ -779,81 +811,47 @@
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">✨</div>
-                <span class="logo-text">aura</span>
+                <div class="logo-text">
+                    <span class="logo-name">Wyrielle & Matt</span>
+                    <span class="logo-sub">private storage</span>
+                </div>
             </div>
             
-            <div class="stats">
-                <div class="stat-item">
-                    <span>📸</span>
-                    <span class="stat-value" id="totalPhotos">0</span>
-                    <span>photos</span>
-                </div>
-                <div class="stat-item">
-                    <span>📁</span>
-                    <span class="stat-value" id="totalAlbums">0</span>
-                    <span>albums</span>
-                </div>
-                <div class="stat-item">
-                    <span>⚡</span>
-                    <span class="stat-value">10GB</span>
-                    <span>free</span>
+            <div class="storage-stats">
+                <span class="storage-used" id="storageUsed">0 MB</span>
+                <span class="storage-total">/ 10 GB</span>
+                <div class="storage-bar">
+                    <div class="storage-fill" id="storageFill" style="width: 0%"></div>
                 </div>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <!-- Connection Status -->
+        <!-- Welcome section -->
+        <div class="welcome">
+            <h1>your private space</h1>
+            <div class="welcome-date" id="currentDate"></div>
+        </div>
+
+        <!-- Connection status -->
         <div class="connection-card">
-            <div class="connection-info">
+            <div class="connection-left">
                 <div class="connection-dot"></div>
                 <div class="connection-text">
-                    <h3>Cloudflare R2 Connected</h3>
-                    <p>Your private storage is active and secure</p>
+                    <h3>Cloudflare R2 • Secure</h3>
+                    <p>Your memories are encrypted and safe</p>
                 </div>
             </div>
             <div class="connection-badge">
-                ⚡ 10GB Free Tier
+                ⚡ 10 GB Free
             </div>
         </div>
 
-        <!-- Hero Section -->
-        <div class="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    Your memories, <span>permanently yours</span>
-                </h1>
-                
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <div class="hero-stat-icon">🔒</div>
-                        <div class="hero-stat-info">
-                            <h4>Encryption</h4>
-                            <p>End-to-end</p>
-                        </div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-icon">🌍</div>
-                        <div class="hero-stat-info">
-                            <h4>Global CDN</h4>
-                            <p>Lightning fast</p>
-                        </div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-icon">💎</div>
-                        <div class="hero-stat-info">
-                            <h4>Your control</h4>
-                            <p>100% private</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Create Album -->
-        <div class="create-album">
+        <!-- Create album -->
+        <div class="create-section">
             <div class="section-header">
-                <div class="section-header-icon">✨</div>
+                <div class="section-header-icon">📁</div>
                 <h2>Create new album</h2>
             </div>
             
@@ -866,7 +864,7 @@
             </div>
         </div>
 
-        <!-- Upload Area -->
+        <!-- Upload area -->
         <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
             <div class="upload-icon">☁️</div>
             <h3 class="upload-title">Upload to your cloud</h3>
@@ -876,25 +874,25 @@
                 <option value="">Choose an album...</option>
             </select>
             
-            <button class="btn-primary" type="button" style="margin-top: 20px; display: inline-flex;">
+            <button class="btn-primary" type="button" style="margin-top: 20px;" onclick="event.stopPropagation();document.getElementById('fileInput').click()">
                 <span>📤</span>
                 Select Photos
             </button>
         </div>
 
-        <!-- Albums Grid -->
+        <!-- Albums grid -->
         <div class="section-header" style="margin-bottom: 20px;">
-            <div class="section-header-icon">📁</div>
+            <div class="section-header-icon">📚</div>
             <h2>Your albums</h2>
         </div>
         
         <div class="albums-grid" id="albumsGrid"></div>
 
-        <!-- Recent Photos -->
+        <!-- Recent photos -->
         <div class="photos-section">
-            <div class="section-header">
-                <div class="section-header-icon">🕒</div>
+            <div class="photos-header">
                 <h2>Recent memories</h2>
+                <span class="photos-count" id="totalPhotosCount">0 photos</span>
             </div>
             
             <div class="photos-grid" id="recentGrid"></div>
@@ -927,11 +925,11 @@
             publicUrl: 'https://pub-YOUR_ID.r2.dev'
         };
 
-        // Data storage
-        let albums = JSON.parse(localStorage.getItem('auraAlbums')) || {};
-        let recentItems = JSON.parse(localStorage.getItem('auraRecent')) || [];
+        // Data storage (this keeps all your photos forever!)
+        let albums = JSON.parse(localStorage.getItem('wyrielle_matt_albums')) || {};
+        let recentItems = JSON.parse(localStorage.getItem('wyrielle_matt_recent')) || [];
 
-        // Initialize with default albums if empty
+        // Initialize with welcome albums if empty
         if (Object.keys(albums).length === 0) {
             albums = {
                 'Favorites': { photos: [], created: new Date().toISOString() },
@@ -940,23 +938,33 @@
             };
         }
 
-        // Save data
+        // Set current date
+        const date = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').textContent = date.toLocaleDateString('en-US', options);
+
+        // Save data (this makes photos persist forever!)
         function saveData() {
-            localStorage.setItem('auraAlbums', JSON.stringify(albums));
-            localStorage.setItem('auraRecent', JSON.stringify(recentItems.slice(0, 30)));
+            localStorage.setItem('wyrielle_matt_albums', JSON.stringify(albums));
+            localStorage.setItem('wyrielle_matt_recent', JSON.stringify(recentItems.slice(0, 30)));
             updateStats();
         }
 
-        // Update stats
+        // Update all stats
         function updateStats() {
             const totalPhotos = Object.values(albums).reduce((sum, album) => sum + album.photos.length, 0);
             const totalAlbums = Object.keys(albums).length;
             
-            document.getElementById('totalPhotos').textContent = totalPhotos;
-            document.getElementById('totalAlbums').textContent = totalAlbums;
+            document.getElementById('totalPhotosCount').textContent = totalPhotos + ' ' + (totalPhotos === 1 ? 'photo' : 'photos');
+            
+            // Update storage stats (estimate 5MB per photo)
+            const estimatedMB = totalPhotos * 5;
+            const usedGB = (estimatedMB / 1024).toFixed(2);
+            document.getElementById('storageUsed').textContent = estimatedMB < 1024 ? estimatedMB + ' MB' : usedGB + ' GB';
+            document.getElementById('storageFill').style.width = Math.min((estimatedMB / 10240) * 100, 100) + '%';
         }
 
-        // Show toast
+        // Show toast notification
         function showToast(message, isSuccess = true) {
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -989,6 +997,18 @@
             showToast(`✨ Album "${name}" created`);
         };
 
+        // Delete album
+        window.deleteAlbum = function(albumName, event) {
+            event.stopPropagation();
+            
+            if (confirm(`Delete "${albumName}" and all its photos?`)) {
+                delete albums[albumName];
+                saveData();
+                renderAll();
+                showToast(`🗑️ Album "${albumName}" deleted`);
+            }
+        };
+
         // Handle file upload
         document.getElementById('fileInput').addEventListener('change', async function(e) {
             const files = Array.from(e.target.files);
@@ -1015,13 +1035,15 @@
                 // Update progress
                 progressBar.style.width = `${((i + 1) / files.length) * 100}%`;
 
-                // For demo, use placeholder images
-                // In production, you'd upload to R2 here
-                const photoUrl = `https://images.unsplash.com/photo-${1500000000 + i}?w=800&auto=format`;
+                // Create a unique ID for the photo
+                const photoId = Date.now() + '_' + i + '_' + Math.random().toString(36).substr(2, 9);
+                
+                // Create object URL for the photo
+                const url = URL.createObjectURL(file);
                 
                 const photo = {
-                    id: Date.now() + '_' + i,
-                    url: photoUrl,
+                    id: photoId,
+                    url: url,
                     name: file.name,
                     type: file.type.startsWith('image/') ? 'image' : 'video',
                     date: new Date().toISOString(),
@@ -1041,7 +1063,7 @@
 
             saveData();
             renderAll();
-            showToast(`✨ Uploaded ${files.length} photos to "${albumName}"`);
+            showToast(`✨ Uploaded ${files.length} photo${files.length > 1 ? 's' : ''} to "${albumName}"`);
         });
 
         // Render albums
@@ -1074,6 +1096,7 @@
                 }
 
                 card.innerHTML = `
+                    <div class="delete-btn" onclick="deleteAlbum('${albumName}', event)">🗑️</div>
                     ${coverHtml}
                     <div class="album-info">
                         <span class="album-name">${albumName}</span>
@@ -1094,7 +1117,7 @@
             modal.style.background = 'var(--surface)';
             
             const photosHtml = album.photos.map(photo => `
-                <div class="photo-item" onclick="viewPhoto('${photo.url}', '${photo.type}', event)">
+                <div class="photo-item" onclick="viewPhoto('${photo.id}', '${photo.type}', '${albumName}', event)">
                     <img src="${photo.url}" alt="">
                     <span class="photo-badge">${photo.type === 'video' ? '▶' : '📷'}</span>
                 </div>
@@ -1110,7 +1133,7 @@
                         ${photosHtml || '<div class="empty-state"><div class="empty-state-icon">📸</div><h3>No photos yet</h3><p>Upload your first photo to this album</p></div>'}
                     </div>
                 </div>
-                <button onclick="addToAlbum('${albumName}')" class="btn-primary" style="margin: 20px; align-self: center;">
+                <button onclick="addToAlbum('${albumName}')" class="btn-primary" style="margin: 20px auto;">
                     <span>📤</span>
                     Add Photos
                 </button>
@@ -1127,8 +1150,14 @@
         };
 
         // View photo
-        window.viewPhoto = function(url, type, event) {
+        window.viewPhoto = function(photoId, type, albumName, event) {
             event.stopPropagation();
+            
+            const album = albums[albumName];
+            const photo = album.photos.find(p => p.id === photoId);
+            
+            if (!photo) return;
+            
             const modal = document.getElementById('modal');
             const modalImage = document.getElementById('modalImage');
             const modalVideo = document.getElementById('modalVideo');
@@ -1139,13 +1168,14 @@
             if (type === 'image') {
                 modalImage.style.display = 'block';
                 modalVideo.style.display = 'none';
-                modalImage.src = url;
+                modalImage.src = photo.url;
             } else {
                 modalVideo.style.display = 'block';
                 modalImage.style.display = 'none';
-                modalVideo.src = url;
+                modalVideo.src = photo.url;
             }
-            downloadBtn.href = url;
+            
+            downloadBtn.href = photo.url;
         };
 
         // Close modal
@@ -1156,17 +1186,17 @@
             modalVideo.pause();
         };
 
-        // Render recent
+        // Render recent photos
         function renderRecent() {
             const grid = document.getElementById('recentGrid');
             
             if (recentItems.length === 0) {
-                grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><div class="empty-state-icon">🌅</div><h3>No memories yet</h3><p>Upload your first photo to get started</p></div>';
+                grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🌅</div><h3>No memories yet</h3><p>Upload your first photo to get started</p></div>';
                 return;
             }
             
             grid.innerHTML = recentItems.slice(0, 12).map(photo => `
-                <div class="photo-item" onclick="viewPhoto('${photo.url}', '${photo.type}', event)">
+                <div class="photo-item" onclick="viewPhoto('${photo.id}', '${photo.type}', '${photo.album}', event)">
                     <img src="${photo.url}" alt="">
                 </div>
             `).join('');
@@ -1191,19 +1221,19 @@
         
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadArea.style.borderColor = 'var(--primary)';
-            uploadArea.style.transform = 'scale(1.02)';
+            uploadArea.style.borderColor = 'var(--accent-primary)';
+            uploadArea.style.background = 'rgba(99,102,241,0.02)';
         });
 
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.style.borderColor = 'var(--border)';
-            uploadArea.style.transform = 'scale(1)';
+            uploadArea.style.background = 'transparent';
         });
 
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.style.borderColor = 'var(--border)';
-            uploadArea.style.transform = 'scale(1)';
+            uploadArea.style.background = 'transparent';
             
             const files = Array.from(e.dataTransfer.files);
             const albumName = document.getElementById('albumSelect').value;
@@ -1214,7 +1244,10 @@
             }
             
             if (files.length > 0) {
-                document.getElementById('fileInput').files = e.dataTransfer.files;
+                // Create a new FileList-like object
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                document.getElementById('fileInput').files = dataTransfer.files;
                 document.getElementById('fileInput').dispatchEvent(new Event('change'));
             }
         });
