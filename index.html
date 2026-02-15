@@ -1,135 +1,473 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Wyrielle ❤️</title>
-<style>
-    body {
-        margin: 0;
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(135deg, #ffafc1, #ff78a9);
-        color: white;
-        text-align: center;
-        overflow: hidden;
-    }
-    h1 {
-        margin-top: 30px;
-        font-size: 2.5em;
-        animation: fadeIn 2s ease-in-out;
-    }
-    p {
-        font-size: 1.2em;
-        margin: 10px;
-        opacity: 1;
-    }
-    button {
-        margin: 8px;
-        padding: 10px 20px;
-        font-size: 1em;
-        border: none;
-        border-radius: 20px;
-        background: white;
-        color: #ff4e8c;
-        cursor: pointer;
-        transition: 0.3s ease;
-    }
-    button:hover {
-        background: #ffe3f0;
-        transform: scale(1.1);
-    }
-    @keyframes fadeIn {
-        from {opacity: 0;}
-        to {opacity: 1;}
-    }
-    .floating {
-        position: absolute;
-        user-select: none;
-    }
-    #buttons {
-        display: none; /* hidden at start */
-        margin-top: 20px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .link-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .link-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .slideshow-container {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .recent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .category-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .add-photo-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .photo-item {
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .photo-item img, .photo-item video {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-item video {
+            background: #000;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            padding: 40px;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        .download-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .create-category {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .create-category input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .create-category button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .hidden-file-input {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>📸 Photo Gallery</h1>
+            
+            <!-- Navigation Links -->
+            <div class="nav-links">
+                <a href="#" class="link-btn" id="link1">LINK 1</a>
+                <a href="#" class="link-btn" id="link2">LINK 2</a>
+                <a href="#" class="link-btn" id="link3">LINK 3</a>
+            </div>
 
-<h1>For Wyrielle 💖</h1>
-<p>Tap the button below to see your surprise ❤️</p>
+            <!-- Slideshow -->
+            <div class="slideshow-container" id="slideshow">
+                <!-- Slides will be added dynamically -->
+            </div>
 
-<!-- First button -->
-<button id="startButton">🎁 Open Your Surprise</button>
+            <!-- Recently Added Section -->
+            <h2>📱 Recently Added</h2>
+            <div class="recent-grid" id="recentGrid"></div>
+        </header>
 
-<!-- Background Music -->
-<audio id="bgMusic" src="Paraluman.mp3" loop></audio>
+        <!-- Create New Category -->
+        <div class="create-category">
+            <input type="text" id="newCategoryName" placeholder="New category name...">
+            <button onclick="createNewCategory()">Create Category</button>
+        </div>
 
-<!-- 20 Love Buttons -->
-<div id="buttons">
-    <button onclick="showLove('I love your smile, Wyrielle 😍')">Your beautiful smile</button>
-    <button onclick="showLove('I love how your laugh lights up everything 😂')">Your laugh</button>
-    <button onclick="showLove('I love thinking of you every moment ⏳')">I think of you</button>
-    <button onclick="showLove('I love your kindness and warmth ❤️')">Your kindness</button>
-    <button onclick="showLove('I love your hugs 🤗')">Your hugs</button>
-    <button onclick="showLove('I love our memories together 💭')">Our memories</button>
-    <button onclick="showLove('I love dreaming of our future together 🌟')">Our future</button>
-    <button onclick="showLove('I love how amazing you are 💯')">You’re amazing</button>
-    <button onclick="showLove('I love how you make everything better 💞')">You make it better</button>
-    <button onclick="showLove('I love every little thing about you ✨')">Every little thing</button>
-    <button onclick="showLove('I love how you brighten my days 🌞')">You brighten days</button>
-    <button onclick="showLove('I love how special you are 💎')">You’re special</button>
-    <button onclick="showLove('I love you more than words can say 💌')">Words can’t say</button>
-    <button onclick="showLove('I love your eyes that sparkle like stars 🌟')">Your sparkling eyes</button>
-    <button onclick="showLove('I love you with all my heart 💗')">All my heart</button>
-    <button onclick="showLove('I love how you feel like home 🏡')">You feel like home</button>
-    <button onclick="showLove('I love loving you 🥰')">I love loving you</button>
-    <button onclick="showLove('I love every second with you ⏰')">Every second</button>
-    <button onclick="showLove('I love our laughter together 😂💖')">Our laughter</button>
-    <button onclick="showLove('I love you forever and always 💞')">Forever & always</button>
-</div>
+        <!-- Categories Container -->
+        <div id="categoriesContainer"></div>
+    </div>
 
-<script>
-// Button interaction
-document.getElementById("startButton").onclick = function() {
-    this.style.display = "none";               // Hide the first button
-    document.getElementById("bgMusic").play(); // Play music
-    document.getElementById("buttons").style.display = "block"; // Show all buttons
-    startAnimation();                          // Start hearts/confetti
-}
+    <!-- Modal for viewing photos/videos -->
+    <div class="modal" id="modal">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage" style="display: none;">
+        <video class="modal-content" id="modalVideo" controls style="display: none;"></video>
+        <a href="#" class="download-btn" id="downloadBtn" download>Download</a>
+    </div>
 
-// Floating hearts + confetti
-function startAnimation() {
-    for (let i = 0; i < 40; i++) {
-        let div = document.createElement("div");
-        div.className = "floating";
-        div.style.left = Math.random() * 100 + "vw";
-        div.style.top = Math.random() * 100 + "vh";
-        div.style.fontSize = (Math.random() * 30 + 15) + "px";
-        if (i % 2 === 0) div.textContent = "❤️"; 
-        else div.textContent = "🎉";
-        document.body.appendChild(div);
-        animateFloating(div);
-    }
-}
+    <script>
+        // Initialize data structure
+        let categories = JSON.parse(localStorage.getItem('galleryCategories')) || {
+            'General': []
+        };
 
-// Animate movement
-function animateFloating(el) {
-    let x = Math.random() * 200 - 100;
-    let y = Math.random() * 200 - 100;
-    el.animate([
-        { transform: `translate(0,0)` },
-        { transform: `translate(${x}px, ${y}px)` }
-    ], { 
-        duration: Math.random() * 4000 + 4000,
-        iterations: Infinity,
-        direction: "alternate"
-    });
-}
+        let recentItems = JSON.parse(localStorage.getItem('recentItems')) || [];
 
-// Button messages
-function showLove(msg) {
-    alert(msg);
-}
-</script>
+        // Link URLs (you can modify these)
+        document.getElementById('link1').href = 'https://example1.com';
+        document.getElementById('link2').href = 'https://example2.com';
+        document.getElementById('link3').href = 'https://example3.com';
 
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('galleryCategories', JSON.stringify(categories));
+            localStorage.setItem('recentItems', JSON.stringify(recentItems));
+        }
+
+        // Create a new category
+        window.createNewCategory = function() {
+            const categoryName = document.getElementById('newCategoryName').value.trim();
+            if (categoryName && !categories[categoryName]) {
+                categories[categoryName] = [];
+                saveData();
+                renderCategories();
+                document.getElementById('newCategoryName').value = '';
+            } else if (categories[categoryName]) {
+                alert('Category already exists!');
+            }
+        };
+
+        // Add photo to category
+        window.addPhotoToCategory = function(categoryName) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,video/*';
+            input.multiple = true;
+            input.onchange = function(e) {
+                Array.from(e.target.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const mediaItem = {
+                            url: event.target.result,
+                            type: file.type.startsWith('image/') ? 'image' : 'video',
+                            timestamp: Date.now()
+                        };
+                        
+                        categories[categoryName].push(mediaItem);
+                        recentItems.unshift({
+                            ...mediaItem,
+                            category: categoryName
+                        });
+                        
+                        // Keep only last 20 recent items
+                        recentItems = recentItems.slice(0, 20);
+                        
+                        saveData();
+                        renderCategories();
+                        renderRecent();
+                        updateSlideshow();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            };
+            input.click();
+        };
+
+        // Render categories
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+
+            Object.keys(categories).forEach(categoryName => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-section';
+                
+                categoryDiv.innerHTML = `
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span class="category-title">📁 ${categoryName}</span>
+                        <button class="add-photo-btn" onclick="addPhotoToCategory('${categoryName}'); event.stopPropagation();">+ Add Photos</button>
+                    </div>
+                    <div class="photo-grid" id="category-${categoryName}" style="display: none;">
+                        ${categories[categoryName].map((item, index) => `
+                            <div class="photo-item" onclick="openMedia('${item.url}', '${item.type}')">
+                                ${item.type === 'image' 
+                                    ? `<img src="${item.url}" alt="Photo">` 
+                                    : `<video src="${item.url}"></video>`
+                                }
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(categoryDiv);
+            });
+        }
+
+        // Toggle category visibility
+        window.toggleCategory = function(header) {
+            const grid = header.nextElementSibling;
+            grid.style.display = grid.style.display === 'none' ? 'grid' : 'none';
+        };
+
+        // Render recent items
+        function renderRecent() {
+            const recentGrid = document.getElementById('recentGrid');
+            recentGrid.innerHTML = recentItems.map(item => `
+                <div class="photo-item" onclick="openMedia('${item.url}', '${item.type}')">
+                    ${item.type === 'image' 
+                        ? `<img src="${item.url}" alt="Recent">` 
+                        : `<video src="${item.url}"></video>`
+                    }
+                </div>
+            `).join('');
+        }
+
+        // Update slideshow
+        function updateSlideshow() {
+            const slideshow = document.getElementById('slideshow');
+            const allItems = Object.values(categories).flat();
+            
+            if (allItems.length === 0) {
+                slideshow.innerHTML = '<div style="text-align: center; padding: 50px;">Add photos to see slideshow</div>';
+                return;
+            }
+
+            // Get random items for slideshow
+            const slideshowItems = [];
+            const itemsCopy = [...allItems];
+            for (let i = 0; i < Math.min(5, itemsCopy.length); i++) {
+                const randomIndex = Math.floor(Math.random() * itemsCopy.length);
+                slideshowItems.push(itemsCopy[randomIndex]);
+                itemsCopy.splice(randomIndex, 1);
+            }
+
+            slideshow.innerHTML = slideshowItems.map((item, index) => `
+                ${item.type === 'image' 
+                    ? `<img src="${item.url}" class="slide ${index === 0 ? 'active' : ''}" alt="Slide">` 
+                    : `<video src="${item.url}" class="slide ${index === 0 ? 'active' : ''}" muted loop></video>`
+                }
+            `).join('');
+
+            // Start slideshow rotation
+            let currentSlide = 0;
+            setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                if (slides.length > 0) {
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                    
+                    // Play video if it's a video slide
+                    if (slides[currentSlide].tagName === 'VIDEO') {
+                        slides[currentSlide].play();
+                    }
+                }
+            }, 3000);
+        }
+
+        // Open media in modal
+        window.openMedia = function(url, type) {
+            const modal = document.getElementById('modal');
+            const modalImage = document.getElementById('modalImage');
+            const modalVideo = document.getElementById('modalVideo');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            modal.classList.add('active');
+            
+            if (type === 'image') {
+                modalImage.style.display = 'block';
+                modalVideo.style.display = 'none';
+                modalImage.src = url;
+                downloadBtn.href = url;
+            } else {
+                modalVideo.style.display = 'block';
+                modalImage.style.display = 'none';
+                modalVideo.src = url;
+                downloadBtn.href = url;
+            }
+        };
+
+        // Close modal
+        window.closeModal = function() {
+            const modal = document.getElementById('modal');
+            const modalVideo = document.getElementById('modalVideo');
+            modal.classList.remove('active');
+            modalVideo.pause();
+        };
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize the gallery
+        function init() {
+            renderCategories();
+            renderRecent();
+            updateSlideshow();
+        }
+
+        init();
+    </script>
 </body>
-</html>
+                </html>
