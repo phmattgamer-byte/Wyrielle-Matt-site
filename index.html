@@ -3,415 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>aura • your private gallery</title>
+    <title>My Cloud Gallery • with Slideshow</title>
     <style>
+        /* CSS (same as before, plus slideshow styles) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-
-        :root {
-            --bg-dark: #0a0a0c;
-            --bg-card: #111315;
-            --surface: #1a1d21;
-            --surface-light: #2a2f35;
-            --primary: #6366f1;
-            --primary-glow: #818cf8;
-            --accent: #10b981;
-            --text: #ffffff;
-            --text-secondary: #9ca3af;
-            --border: #2d3138;
-            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        }
-
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.5;
+            background: #f0f2f5;
+            padding: 16px;
+            padding-bottom: 80px;
         }
-
-        /* Header */
         .header {
-            background: rgba(17, 19, 21, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(45, 49, 56, 0.5);
-            padding: 12px 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
+        h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            color: #1a1a1a;
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--gradient);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transform: rotate(-5deg);
-            box-shadow: 0 8px 16px -4px rgba(99,102,241,0.5);
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .stats {
             display: flex;
-            gap: 12px;
-            background: var(--surface);
-            padding: 6px 12px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
+            gap: 24px;
         }
-
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .stat-value {
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px;
-        }
-
-        /* Connection status */
-        .connection-card {
-            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.1) 100%);
-            border: 1px solid rgba(99,102,241,0.3);
-            border-radius: 20px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .connection-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .connection-dot {
-            width: 10px;
-            height: 10px;
-            background: #10b981;
-            border-radius: 50%;
-            box-shadow: 0 0 15px #10b981;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .connection-text h3 {
-            font-size: 16px;
-            margin-bottom: 2px;
-        }
-
-        .connection-text p {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .connection-badge {
-            background: var(--surface);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 13px;
-            border: 1px solid var(--border);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
             gap: 8px;
-            margin-bottom: 16px;
+            color: #666;
         }
-
-        .section-header-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--gradient);
-            border-radius: 10px;
+        .stat-number {
+            font-weight: 700;
+            color: #0066ff;
+            font-size: 18px;
+        }
+        /* Slideshow styles */
+        .slideshow-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .slideshow-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 16px;
+            background: #e0e0e0;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .create-album {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        .album-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .album-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 16px;
+        }
+        .album-form input:focus {
+            border-color: #0066ff;
+            outline: none;
+        }
+        .btn-primary {
+            background: #0066ff;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-primary:active {
+            background: #0052cc;
+        }
+        .upload-section {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 2px dashed #0066ff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .upload-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        .upload-header h3 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .upload-header p {
+            color: #666;
+        }
+        .upload-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .album-select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 16px;
+        }
+        .cloudinary-btn {
+            background: #0066ff;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            gap: 8px;
         }
-
-        .section-header h2 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        /* Create album */
-        .create-album {
-            background: var(--surface);
+        .albums-section {
+            background: white;
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 24px;
-            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-
-        .album-form {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .album-form input {
-            flex: 2;
-            min-width: 220px;
-            padding: 14px 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            color: var(--text);
-            font-size: 15px;
-        }
-
-        .album-form input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 14px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            flex: 1;
-            justify-content: center;
-            min-width: 140px;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px -5px rgba(99,102,241,0.5);
-        }
-
-        /* Upload area */
-        .upload-area {
-            background: var(--surface);
-            border: 2px dashed var(--border);
-            border-radius: 24px;
-            padding: 32px 20px;
-            margin-bottom: 32px;
-            text-align: center;
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .upload-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .upload-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            font-size: 14px;
-        }
-
-        .upload-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 16px;
-        }
-
-        .album-select {
-            background: var(--surface-light);
-            border: 1px solid var(--border);
-            padding: 12px 20px;
-            border-radius: 40px;
-            color: var(--text);
-            font-size: 14px;
-            min-width: 180px;
-            cursor: pointer;
-            flex: 1;
-            max-width: 220px;
-        }
-
-        .btn-secondary {
-            background: var(--surface-light);
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary:hover {
-            background: var(--surface);
-            border-color: var(--primary);
-        }
-
-        /* Albums grid */
         .albums-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            margin-bottom: 32px;
+            margin-top: 16px;
         }
-
         .album-card {
-            background: var(--surface);
-            border-radius: 20px;
+            background: #f8f9fa;
+            border-radius: 16px;
             padding: 16px;
-            border: 1px solid var(--border);
             cursor: pointer;
-            transition: all 0.3s;
+            border: 2px solid transparent;
+            transition: all 0.2s;
         }
-
-        .album-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
-            box-shadow: 0 12px 24px -8px rgba(99,102,241,0.3);
+        .album-card:active {
+            border-color: #0066ff;
+            transform: scale(0.98);
         }
-
         .album-cover {
             width: 100%;
-            aspect-ratio: 1;
-            background: var(--surface-light);
-            border-radius: 14px;
+            height: 120px;
+            background: #e0e0e0;
+            border-radius: 12px;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 40px;
             overflow: hidden;
         }
-
         .album-cover img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .album-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .album-name {
             font-weight: 600;
-            font-size: 15px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100px;
+            color: #333;
         }
-
         .album-count {
-            color: var(--text-secondary);
-            font-size: 13px;
-            background: var(--surface-light);
-            padding: 3px 8px;
-            border-radius: 16px;
+            color: #0066ff;
+            font-weight: 600;
         }
-
-        /* Photos grid */
         .photos-section {
-            background: var(--surface);
-            border-radius: 24px;
+            background: white;
+            border-radius: 20px;
             padding: 20px;
-            margin-top: 24px;
-            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-
         .photos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
             margin-top: 16px;
         }
-
         .photo-item {
             aspect-ratio: 1;
             border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
-            background: var(--surface-light);
+            background: #f0f0f0;
         }
-
         .photo-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
         }
-
-        .photo-item:hover img {
-            transform: scale(1.1);
-        }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -420,495 +256,276 @@
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(20px);
             z-index: 1000;
             padding: 20px;
         }
-
         .modal.active {
             display: flex;
             flex-direction: column;
         }
-
         .modal-header {
             display: flex;
             justify-content: flex-end;
-            padding: 12px;
+            padding: 16px;
         }
-
         .modal-close {
-            width: 44px;
-            height: 44px;
-            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            cursor: pointer;
-            transition: all 0.3s;
         }
-
         .modal-media {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .modal-media img, .modal-media video {
+        .modal-media img {
             max-width: 100%;
             max-height: 70vh;
             object-fit: contain;
-            border-radius: 12px;
         }
-
         .modal-download {
-            background: var(--gradient);
+            background: #0066ff;
             color: white;
             text-decoration: none;
-            padding: 14px 28px;
-            border-radius: 30px;
+            padding: 16px;
+            border-radius: 14px;
+            text-align: center;
+            margin: 16px;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 20px auto;
-            width: fit-content;
-            min-width: 180px;
         }
-
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: var(--text-secondary);
+            color: #999;
             grid-column: 1/-1;
         }
-
-        .empty-state-icon {
-            font-size: 60px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
             left: 20px;
             right: 20px;
-            max-width: 360px;
-            margin: 0 auto;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+            background: #333;
+            color: white;
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
             animation: slideUp 0.3s ease;
             z-index: 1000;
         }
-
-        .toast-success {
-            width: 22px;
-            height: 22px;
-            background: #10b981;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
         @keyframes slideUp {
             from { transform: translateY(100px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-
-        @media (max-width: 640px) {
-            .header-content {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .stats {
-                justify-content: space-around;
-            }
-            .album-form {
-                flex-direction: column;
-            }
-            .btn-primary {
-                width: 100%;
-            }
-            .upload-controls {
-                flex-direction: column;
-            }
-            .album-select {
-                max-width: 100%;
-                width: 100%;
-            }
-            .btn-secondary {
-                width: 100%;
-                justify-content: center;
-            }
-            .albums-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
     </style>
-    <!-- Cloudinary Widget -->
-    <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">✨</div>
-                <span class="logo-text">aura</span>
-            </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <span>📸</span>
-                    <span class="stat-value" id="totalPhotos">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>📁</span>
-                    <span class="stat-value" id="totalAlbums">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>⚡</span>
-                    <span>Cloudinary</span>
-                </div>
-            </div>
+    <div class="header">
+        <h1>📸 My Cloud Gallery</h1>
+        <div class="stats">
+            <div class="stat-item"><span>📸</span><span class="stat-number" id="totalPhotos">0</span><span>photos</span></div>
+            <div class="stat-item"><span>📁</span><span class="stat-number" id="totalAlbums">0</span><span>albums</span></div>
         </div>
-    </header>
-
-    <main class="container">
-        <!-- Connection Status -->
-        <div class="connection-card">
-            <div class="connection-info">
-                <div class="connection-dot"></div>
-                <div class="connection-text">
-                    <h3>Cloudinary Connected</h3>
-                    <p>Your photos are stored safely in the cloud</p>
-                </div>
-            </div>
-            <div class="connection-badge">
-                ⚡ 25GB Free
-            </div>
-        </div>
-
-        <!-- Create Album -->
-        <div class="create-album">
-            <div class="section-header">
-                <div class="section-header-icon">✨</div>
-                <h2>Create new album</h2>
-            </div>
-            <div class="album-form">
-                <input type="text" id="albumName" placeholder="Album name (e.g., Summer 2025)">
-                <button class="btn-primary" onclick="createAlbum()">
-                    <span>✨</span> Create
-                </button>
-            </div>
-        </div>
-
-        <!-- Upload Area -->
-        <div class="upload-area">
-            <div class="upload-icon">☁️</div>
-            <h3 class="upload-title">Upload to your gallery</h3>
-            <p class="upload-subtitle">Photos are stored securely in Cloudinary</p>
-            <div class="upload-controls">
-                <select id="albumSelect" class="album-select">
-                    <option value="">Choose album...</option>
-                </select>
-                <button class="btn-secondary" onclick="openUploadWidget()">
-                    <span>📤</span> Select Photos
-                </button>
-            </div>
-        </div>
-
-        <!-- Albums Grid -->
-        <div class="section-header">
-            <div class="section-header-icon">📁</div>
-            <h2>Your albums</h2>
-        </div>
-        <div class="albums-grid" id="albumsGrid"></div>
-
-        <!-- Recent Photos -->
-        <div class="photos-section">
-            <div class="section-header">
-                <div class="section-header-icon">🕒</div>
-                <h2>Recent memories</h2>
-            </div>
-            <div class="photos-grid" id="recentGrid"></div>
-        </div>
-    </main>
-
-    <!-- Modal -->
-    <div class="modal" id="modal">
-        <div class="modal-header">
-            <div class="modal-close" onclick="closeModal()">✕</div>
-        </div>
-        <div class="modal-media">
-            <img id="modalImage" style="display: none;">
-            <video id="modalVideo" controls style="display: none;"></video>
-        </div>
-        <a href="#" class="modal-download" id="downloadBtn" download>
-            <span>📥</span> Download
-        </a>
     </div>
 
+    <!-- Slideshow Section (added back) -->
+    <div class="slideshow-section">
+        <div class="slideshow-title">✨ Random Memories</div>
+        <div class="slideshow-container" id="slideshow">
+            <!-- Slides will be added by JavaScript -->
+        </div>
+    </div>
+
+    <div class="create-album">
+        <div class="section-title">➕ Create New Album</div>
+        <div class="album-form">
+            <input type="text" id="albumName" placeholder="e.g., Vacation, Family">
+            <button class="btn-primary" onclick="createAlbum()">Create</button>
+        </div>
+    </div>
+
+    <div class="upload-section">
+        <div class="upload-header">
+            <div class="upload-icon">☁️</div>
+            <h3>Upload to Cloudinary</h3>
+            <p>Your photos are stored safely in the cloud</p>
+        </div>
+        <div class="upload-controls">
+            <select class="album-select" id="albumSelect"><option value="">Select an album...</option></select>
+            <button class="cloudinary-btn" id="uploadWidgetBtn"><span>📤</span> Upload Photos</button>
+        </div>
+    </div>
+
+    <div class="albums-section">
+        <div class="section-title">📁 Your Albums</div>
+        <div class="albums-grid" id="albumsGrid"></div>
+    </div>
+
+    <div class="photos-section">
+        <div class="section-title">🕒 Recent Photos</div>
+        <div class="photos-grid" id="recentGrid"></div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-header"><div class="modal-close" onclick="closeModal()">✕</div></div>
+        <div class="modal-media"><img id="modalImage" src=""></div>
+        <a href="#" class="modal-download" id="downloadBtn" download>Download</a>
+    </div>
+
+    <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+
     <script>
-        // ============================================
-        // YOUR CLOUDINARY DETAILS
-        // ============================================
-        const CLOUDINARY_CLOUD_NAME = 'dhzahjwcp';
-        const CLOUDINARY_UPLOAD_PRESET = 'Mattwygallerypreset';
-        
-        // Data storage (photo references only, not the actual files)
-        let albums = JSON.parse(localStorage.getItem('auraAlbums')) || {
-            'Favorites': { photos: [] },
-            'Travel': { photos: [] }
-        };
-        let recentItems = JSON.parse(localStorage.getItem('auraRecent')) || [];
+        // ===== YOUR CLOUDINARY CREDENTIALS =====
+        const CLOUD_NAME = 'dhzahjwcp';
+        const UPLOAD_PRESET = 'Mattwygallerypreset';
+        // =======================================
 
-        // Save data
+        let albums = JSON.parse(localStorage.getItem('cloudGalleryAlbums')) || { 'Favorites': [], 'Travel': [] };
+        let recentPhotos = JSON.parse(localStorage.getItem('cloudGalleryRecent')) || [];
+
         function saveData() {
-            localStorage.setItem('auraAlbums', JSON.stringify(albums));
-            localStorage.setItem('auraRecent', JSON.stringify(recentItems.slice(0, 30)));
+            localStorage.setItem('cloudGalleryAlbums', JSON.stringify(albums));
+            localStorage.setItem('cloudGalleryRecent', JSON.stringify(recentPhotos.slice(0, 30)));
             updateStats();
+            updateSlideshow(); // update slideshow when data changes
         }
 
-        // Update stats
         function updateStats() {
-            const totalPhotos = Object.values(albums).reduce((sum, album) => sum + album.photos.length, 0);
-            const totalAlbums = Object.keys(albums).length;
-            document.getElementById('totalPhotos').textContent = totalPhotos;
-            document.getElementById('totalAlbums').textContent = totalAlbums;
+            let total = 0;
+            Object.keys(albums).forEach(key => total += albums[key].length);
+            document.getElementById('totalPhotos').textContent = total;
+            document.getElementById('totalAlbums').textContent = Object.keys(albums).length;
         }
 
-        // Show toast message
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `
-                <div class="toast-success">✓</div>
-                <div>${message}</div>
-            `;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function showMessage(msg) {
+            const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg;
+            document.body.appendChild(toast); setTimeout(() => toast.remove(), 2500);
         }
 
-        // Create album
         window.createAlbum = function() {
             const name = document.getElementById('albumName').value.trim();
-            if (!name) {
-                showToast('Please enter an album name');
-                return;
-            }
-            if (albums[name]) {
-                showToast('Album already exists');
-                return;
-            }
-            albums[name] = { photos: [] };
+            if (!name) return showMessage('Enter an album name');
+            if (albums[name]) return showMessage('Album already exists');
+            albums[name] = [];
             saveData();
-            renderAll();
+            renderAlbums(); renderAlbumSelect();
             document.getElementById('albumName').value = '';
-            showToast(`✨ Album "${name}" created`);
+            showMessage(`✅ Album "${name}" created`);
         };
 
-        // Open Cloudinary upload widget
-        window.openUploadWidget = function() {
-            const albumName = document.getElementById('albumSelect').value;
-            if (!albumName) {
-                showToast('Please select an album first');
-                return;
-            }
+        function renderAlbumSelect() {
+            const select = document.getElementById('albumSelect');
+            select.innerHTML = '<option value="">Select an album...</option>';
+            Object.keys(albums).forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = `${name} (${albums[name].length})`;
+                select.appendChild(option);
+            });
+        }
 
-            const uploadWidget = cloudinary.createUploadWidget(
-                {
-                    cloudName: CLOUDINARY_CLOUD_NAME,
-                    uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-                    sources: ['local', 'camera', 'url'],
-                    multiple: true,
-                    maxFiles: 10,
-                    clientAllowedFormats: ['image', 'video'],
-                    maxFileSize: 100000000, // 100MB
-                    showAdvancedOptions: false,
-                    styles: {
-                        palette: {
-                            window: "#1a1d21",
-                            windowBorder: "#2d3138",
-                            tabIcon: "#6366f1",
-                            menuIcons: "#9ca3af",
-                            textDark: "#ffffff",
-                            textLight: "#9ca3af",
-                            link: "#6366f1",
-                            action: "#8b5cf6",
-                            inactiveTabIcon: "#9ca3af",
-                            error: "#ef4444",
-                            inProgress: "#6366f1",
-                            complete: "#10b981",
-                            sourceBg: "#111315"
-                        }
-                    }
-                },
-                (error, result) => {
-                    if (!error && result && result.event === 'success') {
-                        const photo = {
-                            id: Date.now() + '_' + Math.random(),
-                            url: result.info.secure_url,
-                            thumbnail: result.info.secure_url.replace('/upload/', '/upload/w_400/'),
-                            name: result.info.original_filename || 'Photo',
-                            type: result.info.resource_type,
-                            date: new Date().toISOString(),
-                            album: albumName
-                        };
-
-                        albums[albumName].photos.push(photo);
-                        recentItems.unshift(photo);
-                        saveData();
-                        renderAll();
-                        showToast(`✅ Uploaded ${photo.name}`);
-                    }
-                }
-            );
-
-            uploadWidget.open();
-        };
-
-        // Render albums
         function renderAlbums() {
             const grid = document.getElementById('albumsGrid');
-            const select = document.getElementById('albumSelect');
-            
             grid.innerHTML = '';
-            select.innerHTML = '<option value="">Choose album...</option>';
-
-            Object.keys(albums).forEach(albumName => {
-                const album = albums[albumName];
-                
-                const option = document.createElement('option');
-                option.value = albumName;
-                option.textContent = albumName;
-                select.appendChild(option);
-
-                const card = document.createElement('div');
-                card.className = 'album-card';
-                card.onclick = () => openAlbum(albumName);
-
-                let coverHtml = '<div class="album-cover">📁</div>';
-                if (album.photos.length > 0) {
-                    const lastPhoto = album.photos[album.photos.length - 1];
-                    coverHtml = `<div class="album-cover"><img src="${lastPhoto.thumbnail || lastPhoto.url}" alt=""></div>`;
-                }
-
-                card.innerHTML = `
-                    ${coverHtml}
-                    <div class="album-info">
-                        <span class="album-name">${albumName}</span>
-                        <span class="album-count">${album.photos.length}</span>
-                    </div>
-                `;
-
+            Object.keys(albums).forEach(name => {
+                const photos = albums[name];
+                const card = document.createElement('div'); card.className = 'album-card'; card.onclick = () => openAlbum(name);
+                let cover = '<div class="album-cover">📁</div>';
+                if (photos.length) cover = `<div class="album-cover"><img src="${photos[photos.length-1].url}" alt=""></div>`;
+                card.innerHTML = `${cover}<div class="album-info"><span class="album-name">${name}</span><span class="album-count">${photos.length}</span></div>`;
                 grid.appendChild(card);
             });
         }
 
-        // Open album
         window.openAlbum = function(albumName) {
-            const album = albums[albumName];
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal active';
-            modal.style.background = 'var(--surface)';
-            
-            const photosHtml = album.photos.map(photo => `
-                <div class="photo-item" onclick="viewPhoto('${photo.url}', '${photo.type}', event)">
-                    <img src="${photo.thumbnail || photo.url}" alt="">
-                </div>
-            `).join('');
-            
-            modal.innerHTML = `
-                <div class="modal-header" style="justify-content: space-between;">
-                    <h2 style="color: white; font-size: 20px;">${albumName}</h2>
-                    <div class="modal-close" onclick="this.closest('.modal').remove()">✕</div>
-                </div>
-                <div style="flex: 1; overflow-y: auto; padding: 16px;">
-                    <div class="photos-grid">
-                        ${photosHtml || '<div class="empty-state"><div class="empty-state-icon">📸</div><h3>No photos yet</h3><p>Upload your first photo</p></div>'}
-                    </div>
-                </div>
-                <button onclick="addToAlbum('${albumName}')" class="btn-secondary" style="margin: 16px auto; width: fit-content;">
-                    <span>📤</span> Add Photos
-                </button>
-            `;
-            
+            const photos = albums[albumName];
+            const modal = document.createElement('div'); modal.className = 'modal active'; modal.style.background = 'white';
+            let html = photos.length ? photos.map(p => `<div class="photo-item" onclick="viewPhoto('${p.url}', event)"><img src="${p.url}"></div>`).join('') : '<div class="empty-state"><span>📸</span><p>No photos yet</p></div>';
+            modal.innerHTML = `<div style="padding:20px;"><div style="display:flex; justify-content:space-between; margin-bottom:20px;"><h2>${albumName}</h2><button onclick="this.closest('.modal').remove()" style="padding:10px 20px;">Close</button></div><div class="photos-grid" style="grid-template-columns:repeat(3,1fr);">${html}</div></div>`;
             document.body.appendChild(modal);
         };
 
-        window.addToAlbum = function(albumName) {
-            document.querySelector('.modal.active')?.remove();
-            document.getElementById('albumSelect').value = albumName;
-            openUploadWidget();
+        window.viewPhoto = function(url, e) {
+            e.stopPropagation();
+            document.getElementById('modalImage').src = url;
+            document.getElementById('downloadBtn').href = url;
+            document.getElementById('modal').classList.add('active');
         };
 
-        window.viewPhoto = function(url, type, event) {
-            event.stopPropagation();
-            const modal = document.getElementById('modal');
-            const modalImage = document.getElementById('modalImage');
-            const modalVideo = document.getElementById('modalVideo');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            modal.classList.add('active');
-            
-            if (type === 'image') {
-                modalImage.style.display = 'block';
-                modalVideo.style.display = 'none';
-                modalImage.src = url;
-            } else {
-                modalVideo.style.display = 'block';
-                modalImage.style.display = 'none';
-                modalVideo.src = url;
-            }
-            downloadBtn.href = url;
-        };
-
-        window.closeModal = function() {
-            document.getElementById('modal').classList.remove('active');
-            document.getElementById('modalVideo').pause();
-        };
+        window.closeModal = () => document.getElementById('modal').classList.remove('active');
 
         function renderRecent() {
             const grid = document.getElementById('recentGrid');
-            
-            if (recentItems.length === 0) {
-                grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🌅</div><h3>No memories yet</h3><p>Upload your first photo</p></div>';
+            if (!recentPhotos.length) { grid.innerHTML = '<div class="empty-state"><span>🌅</span><p>Upload your first photo</p></div>'; return; }
+            grid.innerHTML = recentPhotos.slice(0,9).map(p => `<div class="photo-item" onclick="viewPhoto('${p.url}', event)"><img src="${p.url}"></div>`).join('');
+        }
+
+        // Slideshow function
+        function updateSlideshow() {
+            const container = document.getElementById('slideshow');
+            // Gather all photos from all albums
+            const allPhotos = [];
+            Object.keys(albums).forEach(key => allPhotos.push(...albums[key]));
+            if (allPhotos.length === 0) {
+                container.innerHTML = '<div style="color:#999; text-align:center; padding:80px;">No photos yet</div>';
                 return;
             }
-            
-            grid.innerHTML = recentItems.slice(0, 12).map(photo => `
-                <div class="photo-item" onclick="viewPhoto('${photo.url}', '${photo.type}', event)">
-                    <img src="${photo.thumbnail || photo.url}" alt="">
-                </div>
-            `).join('');
+            // Pick 5 random photos
+            const shuffled = [...allPhotos].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 5);
+            // Create slide elements
+            container.innerHTML = selected.map((photo, index) => 
+                `<img src="${photo.url}" class="slide ${index === 0 ? 'active' : ''}" alt="slide">`
+            ).join('');
+            // Rotate slides
+            let current = 0;
+            setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                if (slides.length === 0) return;
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
+            }, 3000);
         }
 
-        function renderAll() {
-            renderAlbums();
-            renderRecent();
+        function renderAll() { 
+            renderAlbumSelect(); 
+            renderAlbums(); 
+            renderRecent(); 
             updateStats();
+            updateSlideshow(); 
         }
 
-        // Initialize
-        renderAll();
-
-        // Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModal();
+        // Cloudinary Widget
+        document.getElementById('uploadWidgetBtn').addEventListener('click', function() {
+            const albumName = document.getElementById('albumSelect').value;
+            if (!albumName) return showMessage('Please select an album first');
+            const widget = cloudinary.createUploadWidget(
+                { cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'camera'], multiple: true, maxFiles: 10, clientAllowedFormats: ['image'], maxFileSize: 10000000 },
+                (error, result) => {
+                    if (!error && result && result.event === 'success') {
+                        const info = result.info;
+                        const photo = { id: info.public_id, url: info.secure_url, name: info.original_filename, date: new Date().toISOString(), album: albumName };
+                        albums[albumName].push(photo);
+                        recentPhotos.unshift(photo);
+                        saveData();
+                        renderAlbums(); renderRecent(); renderAlbumSelect();
+                        showMessage(`✅ Uploaded: ${info.original_filename}`);
+                    }
+                }
+            );
+            widget.open();
         });
+
+        renderAll();
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
 </html>
