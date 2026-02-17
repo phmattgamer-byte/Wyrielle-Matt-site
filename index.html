@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>aura • your private gallery</title>
+    <title>mattwy • gallery</title>
     <style>
         * {
             margin: 0;
@@ -35,7 +35,6 @@
             line-height: 1.5;
         }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -50,11 +49,9 @@
             border-radius: 4px;
         }
 
-        /* Header - fixed height, no overflow */
         .header {
             background: rgba(17, 19, 21, 0.8);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(45, 49, 56, 0.5);
             padding: 12px 16px;
             position: sticky;
@@ -88,7 +85,7 @@
             justify-content: center;
             font-size: 20px;
             transform: rotate(-5deg);
-            box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.5);
+            box-shadow: 0 8px 16px -4px rgba(99,102,241,0.5);
         }
 
         .logo-text {
@@ -100,7 +97,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* Stats - now fits perfectly */
         .stats {
             display: flex;
             gap: 12px;
@@ -124,14 +120,12 @@
             color: var(--primary);
         }
 
-        /* Main container - better padding */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 16px;
         }
 
-        /* Connection card - compact */
         .connection-card {
             background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.1) 100%);
             border: 1px solid rgba(99,102,241,0.3);
@@ -154,10 +148,16 @@
         .connection-dot {
             width: 10px;
             height: 10px;
-            background: #f59e0b;
+            background: #10b981;
             border-radius: 50%;
-            box-shadow: 0 0 15px #f59e0b;
+            box-shadow: 0 0 15px #10b981;
             animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .connection-text h3 {
@@ -179,7 +179,6 @@
             white-space: nowrap;
         }
 
-        /* Section header - more compact */
         .section-header {
             display: flex;
             align-items: center;
@@ -203,7 +202,6 @@
             font-weight: 600;
         }
 
-        /* Create album - better button fit */
         .create-album {
             background: var(--surface);
             border-radius: 20px;
@@ -227,7 +225,6 @@
             border-radius: 14px;
             color: var(--text);
             font-size: 15px;
-            transition: all 0.3s;
         }
 
         .album-form input:focus {
@@ -260,7 +257,27 @@
             box-shadow: 0 8px 20px -5px rgba(99,102,241,0.5);
         }
 
-        /* Upload area - cleaner */
+        .btn-secondary {
+            background: var(--surface-light);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface);
+            border-color: var(--primary);
+        }
+
         .upload-area {
             background: var(--surface);
             border: 2px dashed var(--border);
@@ -294,7 +311,6 @@
             font-size: 14px;
         }
 
-        /* Upload controls - FIXED BUTTON LAYOUT */
         .upload-controls {
             display: flex;
             gap: 10px;
@@ -317,28 +333,6 @@
             max-width: 220px;
         }
 
-        .btn-secondary {
-            background: var(--surface-light);
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
-
-        .btn-secondary:hover {
-            background: var(--surface);
-            border-color: var(--primary);
-        }
-
-        /* Albums grid - perfect fit */
         .albums-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -403,7 +397,6 @@
             border-radius: 16px;
         }
 
-        /* Photos grid */
         .photos-section {
             background: var(--surface);
             border-radius: 24px;
@@ -425,6 +418,7 @@
             overflow: hidden;
             cursor: pointer;
             background: var(--surface-light);
+            position: relative;
         }
 
         .photo-item img {
@@ -438,7 +432,18 @@
             transform: scale(1.1);
         }
 
-        /* Modal */
+        .photo-badge {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            z-index: 2;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -506,7 +511,6 @@
             min-width: 180px;
         }
 
-        /* Empty state */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -526,30 +530,6 @@
             margin-bottom: 6px;
         }
 
-        .empty-state p {
-            font-size: 14px;
-        }
-
-        /* Progress bar */
-        .progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: transparent;
-            z-index: 1000;
-            display: none;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--gradient);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -585,53 +565,60 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Mobile fixes */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: transparent;
+            z-index: 1000;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
         @media (max-width: 640px) {
             .header-content {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
             .stats {
                 justify-content: space-around;
             }
-            
             .album-form {
                 flex-direction: column;
             }
-            
             .btn-primary {
                 width: 100%;
             }
-            
             .upload-controls {
                 flex-direction: column;
             }
-            
             .album-select {
                 max-width: 100%;
                 width: 100%;
             }
-            
             .btn-secondary {
                 width: 100%;
                 justify-content: center;
             }
-            
             .albums-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
             }
-            
             .photos-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
-            .modal-download {
-                width: 100%;
-            }
         }
     </style>
+    
+    <!-- Cloudinary Widget Script -->
+    <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 </head>
 <body>
     <!-- Progress bar -->
@@ -644,7 +631,7 @@
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">✨</div>
-                <span class="logo-text">aura</span>
+                <span class="logo-text">mattwy</span>
             </div>
             
             <div class="stats">
@@ -658,24 +645,24 @@
                 </div>
                 <div class="stat-item">
                     <span>⚡</span>
-                    <span>10GB</span>
+                    <span>25GB</span>
                 </div>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <!-- Connection Status - DEMO MODE (Cloudflare tomorrow) -->
+        <!-- Connection Status -->
         <div class="connection-card">
             <div class="connection-info">
                 <div class="connection-dot"></div>
                 <div class="connection-text">
-                    <h3>Demo Mode Active</h3>
-                    <p>Ready for Cloudflare setup tomorrow</p>
+                    <h3>Cloudinary Connected</h3>
+                    <p>Your photos are stored safely in the cloud</p>
                 </div>
             </div>
             <div class="connection-badge">
-                ⚡ Local Storage
+                ⚡ 25GB Free Tier
             </div>
         </div>
 
@@ -695,18 +682,18 @@
             </div>
         </div>
 
-        <!-- Upload Area - FIXED BUTTON LAYOUT -->
+        <!-- Upload Area -->
         <div class="upload-area" id="uploadArea">
             <div class="upload-icon">☁️</div>
-            <h3 class="upload-title">Upload to your gallery</h3>
-            <p class="upload-subtitle">Drag & drop or click to select photos</p>
+            <h3 class="upload-title">Upload to Cloudinary</h3>
+            <p class="upload-subtitle">Your photos are encrypted and stored safely</p>
             
             <div class="upload-controls">
                 <select id="albumSelect" class="album-select">
                     <option value="">Choose album...</option>
                 </select>
                 
-                <button class="btn-secondary" onclick="document.getElementById('fileInput').click()">
+                <button class="btn-secondary" onclick="openCloudinaryUploader()">
                     <span>📤</span>
                     Select Photos
                 </button>
@@ -732,9 +719,6 @@
         </div>
     </main>
 
-    <!-- Hidden file input -->
-    <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display: none;">
-
     <!-- Modal -->
     <div class="modal" id="modal">
         <div class="modal-header">
@@ -751,28 +735,38 @@
     </div>
 
     <script>
-        // DEMO MODE - Works without Cloudflare
-        // Tomorrow you'll replace with Cloudflare config
-        
-        let albums = JSON.parse(localStorage.getItem('auraAlbums')) || {};
-        let recentItems = JSON.parse(localStorage.getItem('auraRecent')) || [];
+        // ============================================
+        // YOUR CLOUDINARY CONFIGURATION
+        // ============================================
+        const CLOUDINARY_CONFIG = {
+            cloudName: 'dhzahjwcp',        // Your cloud name
+            uploadPreset: 'Mattwygallerypreset' // Your upload preset
+        };
+
+        // ============================================
+        // DATA STORAGE
+        // ============================================
+        let albums = JSON.parse(localStorage.getItem('mattwyAlbums')) || {};
+        let recentItems = JSON.parse(localStorage.getItem('mattwyRecent')) || [];
 
         // Initialize with default albums if empty
         if (Object.keys(albums).length === 0) {
             albums = {
                 'Favorites': { photos: [] },
-                'Travel': { photos: [] }
+                'Travel': { photos: [] },
+                'Family': { photos: [] }
             };
         }
 
-        // Save data
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
         function saveData() {
-            localStorage.setItem('auraAlbums', JSON.stringify(albums));
-            localStorage.setItem('auraRecent', JSON.stringify(recentItems.slice(0, 30)));
+            localStorage.setItem('mattwyAlbums', JSON.stringify(albums));
+            localStorage.setItem('mattwyRecent', JSON.stringify(recentItems.slice(0, 30)));
             updateStats();
         }
 
-        // Update stats
         function updateStats() {
             const totalPhotos = Object.values(albums).reduce((sum, album) => sum + album.photos.length, 0);
             const totalAlbums = Object.keys(albums).length;
@@ -781,7 +775,6 @@
             document.getElementById('totalAlbums').textContent = totalAlbums;
         }
 
-        // Show toast
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -793,7 +786,100 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // Create album
+        // ============================================
+        // CLOUDINARY UPLOAD FUNCTION
+        // ============================================
+        window.openCloudinaryUploader = function() {
+            const albumName = document.getElementById('albumSelect').value;
+            if (!albumName) {
+                showToast('Please select an album first');
+                return;
+            }
+
+            if (!albums[albumName]) {
+                showToast('Album not found');
+                return;
+            }
+
+            // Show progress
+            const progressContainer = document.getElementById('progressContainer');
+            progressContainer.style.display = 'block';
+
+            const myWidget = cloudinary.createUploadWidget(
+                {
+                    cloudName: CLOUDINARY_CONFIG.cloudName,
+                    uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
+                    sources: ['local', 'camera', 'url'],
+                    multiple: true,
+                    maxFiles: 20,
+                    clientAllowedFormats: ['image', 'video'],
+                    maxFileSize: 100000000, // 100MB
+                    showAdvancedOptions: false,
+                    cropping: false,
+                    styles: {
+                        palette: {
+                            window: "#1a1d21",
+                            windowBorder: "#2a2f35",
+                            tabIcon: "#6366f1",
+                            menuIcons: "#9ca3af",
+                            textDark: "#ffffff",
+                            textLight: "#ffffff",
+                            link: "#6366f1",
+                            action: "#6366f1",
+                            inactiveTabIcon: "#9ca3af",
+                            error: "#ef4444",
+                            inProgress: "#6366f1",
+                            complete: "#10b981",
+                            sourceBg: "#111315"
+                        }
+                    }
+                },
+                (error, result) => {
+                    if (!error && result && result.event === 'success') {
+                        // Get uploaded file info
+                        const uploadedUrl = result.info.secure_url;
+                        const fileType = result.info.resource_type; // 'image' or 'video'
+                        const fileName = result.info.original_filename || 'photo';
+                        const fileExt = result.info.format;
+
+                        // Create photo object
+                        const photo = {
+                            id: result.info.public_id || Date.now() + '_' + Math.random(),
+                            url: uploadedUrl,
+                            thumbnail: uploadedUrl.replace('/upload/', '/upload/w_400,c_limit/'),
+                            name: fileName + '.' + fileExt,
+                            type: fileType,
+                            date: new Date().toISOString(),
+                            album: albumName,
+                            publicId: result.info.public_id
+                        };
+
+                        // Add to album
+                        albums[albumName].photos.push(photo);
+                        
+                        // Add to recent
+                        recentItems.unshift(photo);
+
+                        // Save and re-render
+                        saveData();
+                        renderAll();
+                        
+                        showToast(`✅ Uploaded ${fileName}`);
+                    }
+                    
+                    if (result && result.event === 'queues-end') {
+                        // All files uploaded
+                        progressContainer.style.display = 'none';
+                    }
+                }
+            );
+
+            myWidget.open();
+        };
+
+        // ============================================
+        // ALBUM FUNCTIONS
+        // ============================================
         window.createAlbum = function() {
             const name = document.getElementById('albumName').value.trim();
             if (!name) {
@@ -811,97 +897,6 @@
             showToast(`✨ Album "${name}" created`);
         };
 
-        // Handle file upload
-        document.getElementById('fileInput').addEventListener('change', async function(e) {
-            const files = Array.from(e.target.files);
-            const albumName = document.getElementById('albumSelect').value;
-
-            if (!albumName) {
-                showToast('Please select an album');
-                return;
-            }
-            if (!albums[albumName]) {
-                showToast('Album not found');
-                return;
-            }
-
-            // Show progress
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            progressContainer.style.display = 'block';
-
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                
-                // Update progress
-                progressBar.style.width = `${((i + 1) / files.length) * 100}%`;
-
-                // Demo: Use placeholder images
-                // Tomorrow with Cloudflare, this will upload to your bucket
-                const photoUrl = `https://images.unsplash.com/photo-${1500000000 + i}?w=400&auto=format`;
-                
-                const photo = {
-                    id: Date.now() + '_' + i,
-                    url: photoUrl,
-                    name: file.name,
-                    type: 'image',
-                    date: new Date().toISOString(),
-                    album: albumName
-                };
-
-                albums[albumName].photos.push(photo);
-                recentItems.unshift(photo);
-            }
-
-            setTimeout(() => {
-                progressContainer.style.display = 'none';
-                progressBar.style.width = '0%';
-            }, 500);
-
-            saveData();
-            renderAll();
-            showToast(`✅ Uploaded ${files.length} photos`);
-        });
-
-        // Render albums
-        function renderAlbums() {
-            const grid = document.getElementById('albumsGrid');
-            const select = document.getElementById('albumSelect');
-            
-            grid.innerHTML = '';
-            select.innerHTML = '<option value="">Choose album...</option>';
-
-            Object.keys(albums).forEach(albumName => {
-                const album = albums[albumName];
-                
-                const option = document.createElement('option');
-                option.value = albumName;
-                option.textContent = albumName;
-                select.appendChild(option);
-
-                const card = document.createElement('div');
-                card.className = 'album-card';
-                card.onclick = () => openAlbum(albumName);
-
-                let coverHtml = '<div class="album-cover">📁</div>';
-                if (album.photos.length > 0) {
-                    const lastPhoto = album.photos[album.photos.length - 1];
-                    coverHtml = `<div class="album-cover"><img src="${lastPhoto.url}" alt=""></div>`;
-                }
-
-                card.innerHTML = `
-                    ${coverHtml}
-                    <div class="album-info">
-                        <span class="album-name">${albumName}</span>
-                        <span class="album-count">${album.photos.length}</span>
-                    </div>
-                `;
-
-                grid.appendChild(card);
-            });
-        }
-
-        // Open album
         window.openAlbum = function(albumName) {
             const album = albums[albumName];
             
@@ -911,7 +906,8 @@
             
             const photosHtml = album.photos.map(photo => `
                 <div class="photo-item" onclick="viewPhoto('${photo.url}', '${photo.type}', event)">
-                    <img src="${photo.url}" alt="">
+                    <img src="${photo.thumbnail || photo.url}" alt="${photo.name}">
+                    ${photo.type === 'video' ? '<span class="photo-badge">▶</span>' : ''}
                 </div>
             `).join('');
             
@@ -937,9 +933,12 @@
         window.addToAlbum = function(albumName) {
             document.querySelector('.modal.active')?.remove();
             document.getElementById('albumSelect').value = albumName;
-            document.getElementById('fileInput').click();
+            openCloudinaryUploader();
         };
 
+        // ============================================
+        // VIEW FUNCTIONS
+        // ============================================
         window.viewPhoto = function(url, type, event) {
             event.stopPropagation();
             const modal = document.getElementById('modal');
@@ -948,16 +947,65 @@
             const downloadBtn = document.getElementById('downloadBtn');
 
             modal.classList.add('active');
-            modalImage.style.display = 'block';
-            modalVideo.style.display = 'none';
-            modalImage.src = url;
+            
+            if (type === 'image') {
+                modalImage.style.display = 'block';
+                modalVideo.style.display = 'none';
+                modalImage.src = url;
+            } else {
+                modalVideo.style.display = 'block';
+                modalImage.style.display = 'none';
+                modalVideo.src = url;
+            }
             downloadBtn.href = url;
         };
 
         window.closeModal = function() {
-            document.getElementById('modal').classList.remove('active');
-            document.getElementById('modalVideo').pause();
+            const modal = document.getElementById('modal');
+            const modalVideo = document.getElementById('modalVideo');
+            modal.classList.remove('active');
+            modalVideo.pause();
         };
+
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+        function renderAlbums() {
+            const grid = document.getElementById('albumsGrid');
+            const select = document.getElementById('albumSelect');
+            
+            grid.innerHTML = '';
+            select.innerHTML = '<option value="">Choose album...</option>';
+
+            Object.keys(albums).forEach(albumName => {
+                const album = albums[albumName];
+                
+                const option = document.createElement('option');
+                option.value = albumName;
+                option.textContent = albumName;
+                select.appendChild(option);
+
+                const card = document.createElement('div');
+                card.className = 'album-card';
+                card.onclick = () => openAlbum(albumName);
+
+                let coverHtml = '<div class="album-cover">📁</div>';
+                if (album.photos.length > 0) {
+                    const lastPhoto = album.photos[album.photos.length - 1];
+                    coverHtml = `<div class="album-cover"><img src="${lastPhoto.thumbnail || lastPhoto.url}" alt=""></div>`;
+                }
+
+                card.innerHTML = `
+                    ${coverHtml}
+                    <div class="album-info">
+                        <span class="album-name">${albumName}</span>
+                        <span class="album-count">${album.photos.length}</span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
 
         function renderRecent() {
             const grid = document.getElementById('recentGrid');
@@ -969,7 +1017,8 @@
             
             grid.innerHTML = recentItems.slice(0, 12).map(photo => `
                 <div class="photo-item" onclick="viewPhoto('${photo.url}', '${photo.type}', event)">
-                    <img src="${photo.url}" alt="">
+                    <img src="${photo.thumbnail || photo.url}" alt="${photo.name}">
+                    ${photo.type === 'video' ? '<span class="photo-badge">▶</span>' : ''}
                 </div>
             `).join('');
         }
@@ -980,42 +1029,34 @@
             updateStats();
         }
 
-        // Initialize
+        // ============================================
+        // INITIALIZE
+        // ============================================
         renderAll();
 
-        // Escape key
+        // Escape key to close modal
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
         });
 
-        // Drag and drop
+        // Drag and drop support
         const uploadArea = document.getElementById('uploadArea');
-        
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.style.borderColor = 'var(--primary)';
         });
-
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.style.borderColor = 'var(--border)';
         });
-
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.style.borderColor = 'var(--border)';
-            
-            const files = Array.from(e.dataTransfer.files);
             const albumName = document.getElementById('albumSelect').value;
-            
             if (!albumName) {
                 showToast('Please select an album first');
                 return;
             }
-            
-            if (files.length > 0) {
-                document.getElementById('fileInput').files = e.dataTransfer.files;
-                document.getElementById('fileInput').dispatchEvent(new Event('change'));
-            }
+            openCloudinaryUploader(); // Widget will handle the files
         });
     </script>
 </body>
