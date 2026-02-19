@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Matt and Wyrielle's private gallery</title>
+    <title>aura • shared gallery</title>
     <style>
-        /* Modern glass‑morphism design – calm and cool */
+        /* same beautiful glass-morphism design – keep as before */
         * {
             margin: 0;
             padding: 0;
@@ -582,7 +582,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>✦ Matt and Wyrielle's private gallery</h1>
+        <h1>✦ aura shared gallery</h1>
         <div class="stats">
             <div class="stat-item"><span>📸</span><span class="stat-number" id="totalPhotos">0</span> photos</div>
             <div class="stat-item"><span>❤️</span><span class="stat-number" id="totalLikes">0</span> likes</div>
@@ -599,7 +599,7 @@
         <div class="slideshow-container" id="slideshow"></div>
     </div>
 
-    <!-- Create Album -->
+    <!-- Create Album (now works immediately) -->
     <div class="create-album">
         <div class="section-title"><span>➕</span> New album</div>
         <div class="album-form">
@@ -621,7 +621,7 @@
         </div>
     </div>
 
-    <!-- Albums -->
+    <!-- Albums Grid (updates in real time) -->
     <div class="albums-section">
         <div class="section-title"><span>📁</span> albums</div>
         <div class="albums-grid" id="albumsGrid"></div>
@@ -676,26 +676,20 @@
             measurementId: "G-8T48W44E5Y"
         };
 
-        // Cloudinary
+        // Cloudinary (already set)
         const CLOUD_NAME = 'dhzahjwcp';
         const UPLOAD_PRESET = 'Mattwygallerypreset';
         // ========================================================
 
-        // Initialize Firebase with error handling
-        let db;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-            console.log('Firebase initialized');
-        } catch (e) {
-            console.error('Firebase init error:', e);
-            showMessage('❌ Firebase failed to initialize. Check config.');
-        }
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         // Global variables
         let allPhotos = [];
+        let albums = [];               // will hold album docs
         let currentSort = 'latest';
-        let currentAlbum = null;
+        let currentAlbum = null;       // filter by album name
         let currentPhotoId = null;
         let nickname = localStorage.getItem('nickname') || 'anonymous';
 
@@ -710,9 +704,19 @@
             }
         };
 
+        // Load albums from Firestore
+        function loadAlbums() {
+            db.collection('albums').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                albums = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                renderAlbums();
+            });
+        }
+
         // Load photos from Firestore
         function loadPhotos() {
-            if (!db) return;
             db.collection('photos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                 allPhotos = snapshot.docs.map(doc => ({
                     id: doc.id,
@@ -721,19 +725,91 @@
                 updateStats();
                 renderPhotos();
                 updateSlideshow();
-                updateAlbumsList();
+                updateAlbumSelect();   // update dropdown with photo-based albums too
+                renderAlbums();         // re-render albums to update counts
             }, error => {
                 console.error("Firestore error:", error);
                 showMessage("⚠️ Firestore error – check rules and database");
             });
         }
 
+        // Render albums grid from 'albums' collection
+        function renderAlbums() {
+            const grid = document.getElementById('albumsGrid');
+            if (albums.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column:span2;">no albums yet – create one!</div>';
+                return;
+            }
+
+            grid.innerHTML = albums.map(album => {
+                const photoCount = allPhotos.filter(p => p.album === album.name).length;
+                const coverPhoto = allPhotos.find(p => p.album === album.name);
+                return `
+                    <div class="album-card" onclick="filterByAlbum('${album.name}')">
+                        <div class="album-cover">${coverPhoto ? `<img src="${coverPhoto.url}">` : '📁'}</div>
+                        <div class="album-info">
+                            <span class="album-name">${album.name}</span>
+                            <span class="album-count">${photoCount}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update album dropdown (for upload) – includes all albums from both sources
+        function updateAlbumSelect() {
+            const select = document.getElementById('albumSelect');
+            // Combine album names from albums collection and from photos (to be safe)
+            const albumNames = new Set();
+            albums.forEach(a => albumNames.add(a.name));
+            allPhotos.forEach(p => { if (p.album) albumNames.add(p.album); });
+
+            select.innerHTML = '<option value="">choose album...</option>';
+            Array.from(albumNames).sort().forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+        }
+
+        // Filter photos by album when clicking album card
+        window.filterByAlbum = function(albumName) {
+            currentAlbum = albumName;
+            setSort(currentSort);  // re-render with filter
+        };
+
+        // Create new album (stores in Firestore)
+        window.createAlbum = async function() {
+            const name = document.getElementById('albumName').value.trim();
+            if (!name) return showMessage('enter album name');
+
+            // Check if album already exists (case-insensitive)
+            const exists = albums.some(a => a.name.toLowerCase() === name.toLowerCase());
+            if (exists) return showMessage('album already exists');
+
+            try {
+                await db.collection('albums').add({
+                    name: name,
+                    createdBy: nickname,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showMessage(`✅ album "${name}" created`);
+                document.getElementById('albumName').value = '';
+            } catch (e) {
+                console.error(e);
+                showMessage('❌ failed to create album');
+            }
+        };
+
+        // Update stats
         function updateStats() {
             document.getElementById('totalPhotos').textContent = allPhotos.length;
             const totalLikes = allPhotos.reduce((acc, p) => acc + (p.likes || 0), 0);
             document.getElementById('totalLikes').textContent = totalLikes;
         }
 
+        // Render photos (with filter & sort)
         function renderPhotos() {
             let filtered = currentAlbum 
                 ? allPhotos.filter(p => p.album === currentAlbum)
@@ -798,40 +874,6 @@
             }, 3500);
         }
 
-        function updateAlbumsList() {
-            const albumsSet = new Set(allPhotos.map(p => p.album).filter(Boolean));
-            const grid = document.getElementById('albumsGrid');
-            const select = document.getElementById('albumSelect');
-            
-            select.innerHTML = '<option value="">choose album...</option>';
-            albumsSet.forEach(album => {
-                const option = document.createElement('option');
-                option.value = album;
-                option.textContent = album;
-                select.appendChild(option);
-            });
-
-            grid.innerHTML = '';
-            albumsSet.forEach(album => {
-                const count = allPhotos.filter(p => p.album === album).length;
-                const coverPhoto = allPhotos.find(p => p.album === album);
-                const card = document.createElement('div');
-                card.className = 'album-card';
-                card.onclick = () => {
-                    currentAlbum = album;
-                    setSort(currentSort);
-                };
-                card.innerHTML = `
-                    <div class="album-cover">${coverPhoto ? `<img src="${coverPhoto.url}">` : '📁'}</div>
-                    <div class="album-info">
-                        <span class="album-name">${album}</span>
-                        <span class="album-count">${count}</span>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
         window.setSort = function(sortType) {
             currentSort = sortType;
             document.getElementById('sortLatest').classList.toggle('active', sortType === 'latest');
@@ -839,37 +881,14 @@
             renderPhotos();
         };
 
-        window.createAlbum = function() {
-            const name = document.getElementById('albumName').value.trim();
-            if (!name) return showMessage('enter album name');
-            showMessage(`✅ album "${name}" – now upload photos with this album name`);
-            document.getElementById('albumName').value = '';
-        };
-
         // Upload widget
         document.getElementById('uploadWidgetBtn').addEventListener('click', function() {
             const albumName = document.getElementById('albumSelect').value;
             if (!albumName) return showMessage('select an album first');
-            if (!CLOUD_NAME || !UPLOAD_PRESET) {
-                showMessage('❌ Cloudinary not configured');
-                return;
-            }
             const widget = cloudinary.createUploadWidget(
-                { 
-                    cloudName: CLOUD_NAME, 
-                    uploadPreset: UPLOAD_PRESET, 
-                    sources: ['local', 'camera'], 
-                    multiple: true, 
-                    maxFiles: 10, 
-                    clientAllowedFormats: ['image'] 
-                },
+                { cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'camera'], multiple: true, maxFiles: 10, clientAllowedFormats: ['image'] },
                 async (error, result) => {
-                    if (error) {
-                        console.error('Cloudinary error:', error);
-                        showMessage('❌ Upload widget error');
-                        return;
-                    }
-                    if (result && result.event === 'success') {
+                    if (!error && result && result.event === 'success') {
                         const info = result.info;
                         try {
                             await db.collection('photos').add({
@@ -921,12 +940,9 @@
             document.body.appendChild(toast); setTimeout(() => toast.remove(), 2500);
         }
 
-        // Start if Firebase ok
-        if (db) {
-            loadPhotos();
-        } else {
-            showMessage('❌ Firebase not initialized – check console');
-        }
+        // Start
+        loadAlbums();
+        loadPhotos();
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
