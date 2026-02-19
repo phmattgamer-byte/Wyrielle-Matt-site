@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>aura • shared gallery</title>
+    <title>My Gallery • shared</title>
     <style>
-        /* (same beautiful glass-morphism design – unchanged) */
+        /* same beautiful glass-morphism design – unchanged */
         * {
             margin: 0;
             padding: 0;
@@ -582,7 +582,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>✦ aura shared gallery</h1>
+        <h1>✦ My Gallery</h1>
         <div class="stats">
             <div class="stat-item"><span>📸</span><span class="stat-number" id="totalPhotos">0</span> photos</div>
             <div class="stat-item"><span>❤️</span><span class="stat-number" id="totalLikes">0</span> likes</div>
@@ -665,21 +665,22 @@
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 
     <script>
-        // ================= YOUR FIREBASE CONFIG =================
+        // ================= YOUR NEW FIREBASE CONFIG =================
         const firebaseConfig = {
             apiKey: "AIzaSyABx7Ib6YfFWBluHO1YXDBeZnl11iIN6n4",
             authDomain: "mygallery-e45c6.firebaseapp.com",
+            databaseURL: "https://mygallery-e45c6-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "mygallery-e45c6",
             storageBucket: "mygallery-e45c6.firebasestorage.app",
             messagingSenderId: "588469648646",
-            appId: "1:588469648646:web:e420054db627356e42b287",
-            measurementId: "G-8T48W44E5Y"
+            appId: "1:588469648646:web:df768dc395a7346442b287",
+            measurementId: "G-TD0FBZT21M"
         };
 
         // Cloudinary (already set)
         const CLOUD_NAME = 'dhzahjwcp';
         const UPLOAD_PRESET = 'Mattwygallerypreset';
-        // ========================================================
+        // ============================================================
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
