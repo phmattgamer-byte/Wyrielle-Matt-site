@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>aura • shared gallery</title>
+    <title>Matt and Wyrielle's private gallery</title>
     <style>
         /* Modern glass‑morphism design – calm and cool */
         * {
@@ -582,7 +582,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>✦ aura shared gallery</h1>
+        <h1>✦ Matt and Wyrielle's private gallery</h1>
         <div class="stats">
             <div class="stat-item"><span>📸</span><span class="stat-number" id="totalPhotos">0</span> photos</div>
             <div class="stat-item"><span>❤️</span><span class="stat-number" id="totalLikes">0</span> likes</div>
@@ -676,14 +676,21 @@
             measurementId: "G-8T48W44E5Y"
         };
 
-        // Cloudinary (already set)
+        // Cloudinary
         const CLOUD_NAME = 'dhzahjwcp';
         const UPLOAD_PRESET = 'Mattwygallerypreset';
         // ========================================================
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // Initialize Firebase with error handling
+        let db;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            console.log('Firebase initialized');
+        } catch (e) {
+            console.error('Firebase init error:', e);
+            showMessage('❌ Firebase failed to initialize. Check config.');
+        }
 
         // Global variables
         let allPhotos = [];
@@ -694,4 +701,234 @@
 
         document.getElementById('nicknameInput').value = nickname;
 
-        window.sav
+        window.saveNickname = function() {
+            const newNick = document.getElementById('nicknameInput').value.trim();
+            if (newNick) {
+                nickname = newNick;
+                localStorage.setItem('nickname', newNick);
+                showMessage(`👤 name saved as ${newNick}`);
+            }
+        };
+
+        // Load photos from Firestore
+        function loadPhotos() {
+            if (!db) return;
+            db.collection('photos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                allPhotos = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                updateStats();
+                renderPhotos();
+                updateSlideshow();
+                updateAlbumsList();
+            }, error => {
+                console.error("Firestore error:", error);
+                showMessage("⚠️ Firestore error – check rules and database");
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalPhotos').textContent = allPhotos.length;
+            const totalLikes = allPhotos.reduce((acc, p) => acc + (p.likes || 0), 0);
+            document.getElementById('totalLikes').textContent = totalLikes;
+        }
+
+        function renderPhotos() {
+            let filtered = currentAlbum 
+                ? allPhotos.filter(p => p.album === currentAlbum)
+                : [...allPhotos];
+
+            if (currentSort === 'latest') {
+                filtered.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+            } else {
+                filtered.sort((a,b) => (b.likes || 0) - (a.likes || 0));
+            }
+
+            const grid = document.getElementById('photosGrid');
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><span>🌅</span><p>no photos yet</p></div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(photo => `
+                <div class="photo-item" onclick="openModal('${photo.id}')">
+                    <img src="${photo.url}" loading="lazy">
+                    <div class="photo-overlay">
+                        <span class="uploader-name">${photo.uploader || 'anonymous'}</span>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <span>❤️ ${photo.likes || 0}</span>
+                            <span class="time-ago">${timeAgo(photo.timestamp)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function timeAgo(timestamp) {
+            if (!timestamp) return '';
+            const seconds = Math.floor((Date.now() - timestamp.seconds*1000) / 1000);
+            if (seconds < 60) return 'just now';
+            const minutes = Math.floor(seconds/60);
+            if (minutes < 60) return `${minutes}m ago`;
+            const hours = Math.floor(minutes/60);
+            if (hours < 24) return `${hours}h ago`;
+            const days = Math.floor(hours/24);
+            return `${days}d ago`;
+        }
+
+        function updateSlideshow() {
+            const container = document.getElementById('slideshow');
+            if (allPhotos.length === 0) {
+                container.innerHTML = '<div style="color:#9ca3af; text-align:center; padding:80px;">no photos yet</div>';
+                return;
+            }
+            const shuffled = [...allPhotos].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 5);
+            container.innerHTML = selected.map((photo, i) => 
+                `<img src="${photo.url}" class="slide ${i === 0 ? 'active' : ''}" alt="slide">`
+            ).join('');
+            let current = 0;
+            setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                if (!slides.length) return;
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
+            }, 3500);
+        }
+
+        function updateAlbumsList() {
+            const albumsSet = new Set(allPhotos.map(p => p.album).filter(Boolean));
+            const grid = document.getElementById('albumsGrid');
+            const select = document.getElementById('albumSelect');
+            
+            select.innerHTML = '<option value="">choose album...</option>';
+            albumsSet.forEach(album => {
+                const option = document.createElement('option');
+                option.value = album;
+                option.textContent = album;
+                select.appendChild(option);
+            });
+
+            grid.innerHTML = '';
+            albumsSet.forEach(album => {
+                const count = allPhotos.filter(p => p.album === album).length;
+                const coverPhoto = allPhotos.find(p => p.album === album);
+                const card = document.createElement('div');
+                card.className = 'album-card';
+                card.onclick = () => {
+                    currentAlbum = album;
+                    setSort(currentSort);
+                };
+                card.innerHTML = `
+                    <div class="album-cover">${coverPhoto ? `<img src="${coverPhoto.url}">` : '📁'}</div>
+                    <div class="album-info">
+                        <span class="album-name">${album}</span>
+                        <span class="album-count">${count}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.setSort = function(sortType) {
+            currentSort = sortType;
+            document.getElementById('sortLatest').classList.toggle('active', sortType === 'latest');
+            document.getElementById('sortLikes').classList.toggle('active', sortType === 'likes');
+            renderPhotos();
+        };
+
+        window.createAlbum = function() {
+            const name = document.getElementById('albumName').value.trim();
+            if (!name) return showMessage('enter album name');
+            showMessage(`✅ album "${name}" – now upload photos with this album name`);
+            document.getElementById('albumName').value = '';
+        };
+
+        // Upload widget
+        document.getElementById('uploadWidgetBtn').addEventListener('click', function() {
+            const albumName = document.getElementById('albumSelect').value;
+            if (!albumName) return showMessage('select an album first');
+            if (!CLOUD_NAME || !UPLOAD_PRESET) {
+                showMessage('❌ Cloudinary not configured');
+                return;
+            }
+            const widget = cloudinary.createUploadWidget(
+                { 
+                    cloudName: CLOUD_NAME, 
+                    uploadPreset: UPLOAD_PRESET, 
+                    sources: ['local', 'camera'], 
+                    multiple: true, 
+                    maxFiles: 10, 
+                    clientAllowedFormats: ['image'] 
+                },
+                async (error, result) => {
+                    if (error) {
+                        console.error('Cloudinary error:', error);
+                        showMessage('❌ Upload widget error');
+                        return;
+                    }
+                    if (result && result.event === 'success') {
+                        const info = result.info;
+                        try {
+                            await db.collection('photos').add({
+                                url: info.secure_url,
+                                publicId: info.public_id,
+                                album: albumName,
+                                uploader: nickname,
+                                likes: 0,
+                                likedBy: [],
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            showMessage(`✅ uploaded: ${info.original_filename}`);
+                        } catch (e) {
+                            console.error(e);
+                            showMessage('❌ failed to save to database');
+                        }
+                    }
+                }
+            );
+            widget.open();
+        });
+
+        window.openModal = function(photoId) {
+            const photo = allPhotos.find(p => p.id === photoId);
+            if (!photo) return;
+            currentPhotoId = photoId;
+            document.getElementById('modalImage').src = photo.url;
+            document.getElementById('modalUploader').textContent = photo.uploader || 'anonymous';
+            document.getElementById('modalTime').textContent = timeAgo(photo.timestamp);
+            document.getElementById('modalLikes').textContent = photo.likes || 0;
+            document.getElementById('downloadBtn').href = photo.url;
+            document.getElementById('modal').classList.add('active');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('modal').classList.remove('active');
+        };
+
+        window.likeCurrentPhoto = async function() {
+            if (!currentPhotoId) return;
+            const photoRef = db.collection('photos').doc(currentPhotoId);
+            await photoRef.update({
+                likes: firebase.firestore.FieldValue.increment(1)
+            });
+        };
+
+        function showMessage(msg) {
+            const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg;
+            document.body.appendChild(toast); setTimeout(() => toast.remove(), 2500);
+        }
+
+        // Start if Firebase ok
+        if (db) {
+            loadPhotos();
+        } else {
+            showMessage('❌ Firebase not initialized – check console');
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>
