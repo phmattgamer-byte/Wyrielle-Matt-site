@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>aura • shared gallery</title>
     <style>
-        /* same beautiful glass-morphism design – keep as before */
+        /* (same beautiful glass-morphism design – unchanged) */
         * {
             margin: 0;
             padding: 0;
@@ -599,7 +599,7 @@
         <div class="slideshow-container" id="slideshow"></div>
     </div>
 
-    <!-- Create Album (now works immediately) -->
+    <!-- Create Album -->
     <div class="create-album">
         <div class="section-title"><span>➕</span> New album</div>
         <div class="album-form">
@@ -621,7 +621,7 @@
         </div>
     </div>
 
-    <!-- Albums Grid (updates in real time) -->
+    <!-- Albums Grid -->
     <div class="albums-section">
         <div class="section-title"><span>📁</span> albums</div>
         <div class="albums-grid" id="albumsGrid"></div>
@@ -712,6 +712,10 @@
                     ...doc.data()
                 }));
                 renderAlbums();
+                updateAlbumSelect();   // update dropdown when albums change
+            }, error => {
+                console.error("Error loading albums:", error);
+                showMessage("⚠️ Failed to load albums");
             });
         }
 
@@ -725,7 +729,7 @@
                 updateStats();
                 renderPhotos();
                 updateSlideshow();
-                updateAlbumSelect();   // update dropdown with photo-based albums too
+                updateAlbumSelect();   // also update dropdown from photos (in case any photo has a new album)
                 renderAlbums();         // re-render albums to update counts
             }, error => {
                 console.error("Firestore error:", error);
@@ -756,7 +760,7 @@
             }).join('');
         }
 
-        // Update album dropdown (for upload) – includes all albums from both sources
+        // Update album dropdown (for upload) – includes all albums from both collections
         function updateAlbumSelect() {
             const select = document.getElementById('albumSelect');
             // Combine album names from albums collection and from photos (to be safe)
@@ -796,6 +800,7 @@
                 });
                 showMessage(`✅ album "${name}" created`);
                 document.getElementById('albumName').value = '';
+                // No need to manually update – snapshot listener will update albums and dropdown
             } catch (e) {
                 console.error(e);
                 showMessage('❌ failed to create album');
